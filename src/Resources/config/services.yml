@@ -1,0 +1,62 @@
+parameters:
+    kunstmaan_extra.public_node_versions.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\PublicNodeVersions'
+    kunstmaan_extra.content_category.class: 'ArsThanea\KunstmaanExtraBundle\ContentCategory\ContentCategoryService'
+    kunstmaan_extra.site_tree.bread_crumbs.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\BreadCrumbsService'
+    kunstmaan_extra.content_type.class: 'ArsThanea\KunstmaanExtraBundle\ContentType\ContentTypeService'
+    kunstmaan_extra.site_tree.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\SiteTreeService'
+    kunstmaan_extra.page_url.class: 'ArsThanea\KunstmaanExtraBundle\Url\PageUrlService'
+
+services:
+    kunstmaan_extra.public_node_versions:
+        class: '%kunstmaan_extra.public_node_versions.class%'
+        arguments: [ '@doctrine.orm.entity_manager' ]
+
+    kunstmaan_extra.content_category:
+        class: '%kunstmaan_extra.content_category.class%'
+        arguments:
+          - '@doctrine_cache.providers.kunstmaan_extra_content_category'
+          - '@kunstmaan_extra.public_node_versions'
+          - '@kunstmaan_extra.site_tree.bread_crumbs'
+
+    kunstmaan_extra.site_tree.bread_crumbs:
+        class: '%kunstmaan_extra.site_tree.bread_crumbs.class%'
+        arguments: [ '@ars_thanea_kunstmaan_extra.node_repository', "%defaultlocale%" ]
+
+
+    kunstmaan_extra.content_type:
+        class: '%kunstmaan_extra.content_type.class%'
+        arguments: [ '@kunstmaan_node.pages_configuration' ]
+
+
+    kunstmaan_extra.site_tree:
+        class: '%kunstmaan_extra.site_tree.class%'
+        arguments:
+          - '@ars_thanea_kunstmaan_extra.node_repository'
+          - '@kunstmaan_extra.public_node_versions'
+          - "%defaultlocale%"
+
+    kunstmaan_extra.site_tree.branch_utilities_service:
+        class: ArsThanea\KunstmaanExtraBundle\SiteTree\BranchUtilitiesService
+
+    kunstmaan_extra.page_url:
+        class: '%kunstmaan_extra.page_url.class%'
+        arguments: [ '@kunstmaan_extra.public_node_versions', '@kunstmaan_redirect.redirectrouter' ]
+
+    ars_thanea_kunstmaan_extra.request_param_converter.page_param_converter:
+        public: false
+        class: ArsThanea\KunstmaanExtraBundle\Request\ParamConverter\PageParamConverter
+        arguments: [ '@doctrine', '@kunstmaan_extra.content_type' ]
+        tags:
+            - { name: request.param_converter }
+
+    ars_thanea_kunstmaan_extra.node_repository:
+        public: false
+        class: 'Kunstmaan\NodeBundle\Repository\NodeRepository'
+        factory: 'doctrine.orm.entity_manager:getRepository'
+        arguments: [ 'KunstmaanNodeBundle:Node' ]
+
+    ars_thanea_kunstmaan_extra.node_translation_repository:
+        public: false
+        class: 'Kunstmaan\NodeBundle\Repository\NodeTranslationRepository'
+        factory: 'doctrine.orm.entity_manager:getRepository'
+        arguments: [ 'KunstmaanNodeBundle:NodeTranslation' ]

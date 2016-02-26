@@ -1,0 +1,22 @@
+{
+    "name": "arsthanea/kunstmaan-extra-bundle",
+    "require": {
+        "kunstmaan/bundles-cms": "~3.5",
+        "friendsofsymfony/user-bundle": "2.0.*@dev",
+        "symfony-cmf/routing-bundle": "~1.4.0-RC1",
+        "symfony-cmf/routing": "~1.4.0-RC2",
+        "nassau/registry-compiler": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maciej Łebkowski",
+            "email": "m.lebkowski@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ArsThanea\\KunstmaanExtraBundle\\": "src/"
+        }
+    }
+}

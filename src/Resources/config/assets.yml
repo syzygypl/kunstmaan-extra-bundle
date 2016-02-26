@@ -1,0 +1,46 @@
+parameters:
+    kunstmaan_extra.url.asset_url_service.class: 'ArsThanea\KunstmaanExtraBundle\Url\AssetUrlService'
+    kunstmaan_extra.assets.md5.class: 'ArsThanea\KunstmaanExtraBundle\Assets\Versioning\Md5VersioningScheme'
+    kunstmaan_extra.assets.cached.class: 'ArsThanea\KunstmaanExtraBundle\Assets\Versioning\KernelCachedVersioningScheme'
+    kunstmaan_extra.assets.asset_versions_cache_warmer.class: 'ArsThanea\KunstmaanExtraBundle\Assets\AssetVersionsCacheWarmer'
+    ars_thanea_kunstmaan_extra.twig.asset_url_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\AssetUrlTwigExtension'
+
+    kunstmaan_extra.assets.cache_file_path: "%kernel.cache_dir%/assets_versions.php"
+    kunstmaan_extra.assets.web_path: "%kernel.root_dir%/../web/%kunstmaan_extra.assets.web_prefix%"
+
+services:
+
+    kunstmaan_extra.url.asset_url_service:
+        class: '%kunstmaan_extra.url.asset_url_service.class%'
+        arguments: [ "%kunstmaan_extra.assets.cdn_url%" ]
+        calls:
+            - [ setVersioningScheme, [ '@kunstmaan_extra.assets.cached' ] ]
+
+
+    kunstmaan_extra.assets.asset_versions_cache_warmer:
+        public: false
+        class: '%kunstmaan_extra.assets.asset_versions_cache_warmer.class%'
+        arguments:
+          - '@kunstmaan_extra.assets.md5'
+          - '%kunstmaan_extra.assets.web_path%'
+          - '%kunstmaan_extra.assets.cache_file_path%'
+        tags:
+            - { name: kernel.cache_warmer }
+
+    kunstmaan_extra.assets.md5:
+        public: false
+        class: '%kunstmaan_extra.assets.md5.class%'
+        arguments: [ "%kunstmaan_extra.assets.web_path%" ]
+
+    kunstmaan_extra.assets.cached:
+        public: false
+        class: '%kunstmaan_extra.assets.cached.class%'
+        arguments: [ '%kunstmaan_extra.assets.cache_file_path%' ]
+
+    ars_thanea_kunstmaan_extra.twig.asset_url_twig_extension:
+        public: false
+        class: '%ars_thanea_kunstmaan_extra.twig.asset_url_twig_extension.class%'
+        arguments: [ '@kunstmaan_extra.url.asset_url_service' ]
+        tags:
+            - { name: twig.extension }
+

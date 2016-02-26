@@ -1,0 +1,37 @@
+parameters:
+    ars_thanea_kunstmaan_extra.site_tree.ref.chain.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\RefIdProvider\ChainRefIdProvider'
+    ars_thanea_kunstmaan_extra.site_tree.ref.node.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\RefIdProvider\NodeRefIdProvider'
+    ars_thanea_kunstmaan_extra.site_tree.ref.pnv.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\RefIdProvider\PublicNodeVersionsRefIdProvider'
+
+services:
+    kunstmaan_extra.ref_id_provider:
+      alias: 'ars_thanea_kunstmaan_extra.site_tree.ref.chain'
+
+    ars_thanea_kunstmaan_extra.site_tree.ref.chain:
+      public: false
+      class: '%ars_thanea_kunstmaan_extra.site_tree.ref.chain.class%'
+      arguments: [ '@ars_thanea_kunstmaan_extra.site_tree.ref.chain.collection' ]
+
+    ars_thanea_kunstmaan_extra.site_tree.ref.chain.collection:
+      class: Doctrine\Common\Collections\ArrayCollection
+      public: false
+      tags:
+        - name: nassau.registry
+          tag: kunstmaan_extra.ref_id_provider
+          order: priority
+          class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\RefIdProvider\RefIdProviderInterface'
+
+    ars_thanea_kunstmaan_extra.site_tree.ref.node:
+        public: false
+        class: '%ars_thanea_kunstmaan_extra.site_tree.ref.node.class%'
+        tags:
+          - name: kunstmaan_extra.ref_id_provider
+            priority: 100
+
+    ars_thanea_kunstmaan_extra.site_tree.ref.pnv:
+        public: false
+        class: '%ars_thanea_kunstmaan_extra.site_tree.ref.pnv.class%'
+        arguments: [ '@kunstmaan_extra.public_node_versions' ]
+        tags:
+          - name: kunstmaan_extra.ref_id_provider
+            priority: 50

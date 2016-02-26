@@ -1,0 +1,52 @@
+parameters:
+    ars_thanea_kunstmaan_extra.twig.render_page_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\RenderPageTwigExtension'
+    ars_thanea_kunstmaan_extra.twig.node_versions_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\NodeVersionsTwigExtension'
+    ars_thanea_kunstmaan_extra.twig.content_category_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\ContentCategoryTwigExtension'
+    ars_thanea_kunstmaan_extra.twig.site_tree_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\SiteTreeTwigExtension'
+    ars_thanea_kunstmaan_extra.twig.page_url_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\PageUrlTwigExtension'
+    ars_thanea_kunstmaan_extra.twig.content_type_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\ContentTypeTwigExtension'
+
+services:
+
+    ars_thanea_kunstmaan_extra.twig.render_page_twig_extension:
+        public: false
+        class: '%ars_thanea_kunstmaan_extra.twig.render_page_twig_extension.class%'
+        arguments: [ '@fragment.handler', '@kunstmaan_extra.ref_id_provider' ]
+        tags:
+            - { name: twig.extension }
+
+    ars_thanea_kunstmaan_extra.twig.node_versions_twig_extension:
+        public: false
+        class: '%ars_thanea_kunstmaan_extra.twig.node_versions_twig_extension.class%'
+        arguments: [ '@kunstmaan_extra.public_node_versions', '@kunstmaan_extra.content_type' ]
+        tags:
+            - { name: twig.extension }
+
+
+    ars_thanea_kunstmaan_extra.twig.content_category_twig_extension:
+        public: false
+        class: '%ars_thanea_kunstmaan_extra.twig.content_category_twig_extension.class%'
+        arguments: [ '@kunstmaan_extra.content_category', '@kunstmaan_utilities.slugifier' ]
+        tags:
+            - { name: twig.extension }
+
+    ars_thanea_kunstmaan_extra.twig.site_tree_twig_extension:
+        public: false
+        class: '%ars_thanea_kunstmaan_extra.twig.site_tree_twig_extension.class%'
+        arguments: [ '@kunstmaan_extra.content_type', '@kunstmaan_extra.site_tree' ]
+        tags:
+            - { name: twig.extension }
+
+    ars_thanea_kunstmaan_extra.twig.page_url_twig_extension:
+        public: false
+        class: '%ars_thanea_kunstmaan_extra.twig.page_url_twig_extension.class%'
+        arguments: [ '@kunstmaan_extra.page_url', '@router' ]
+        tags:
+            - { name: twig.extension }
+
+    ars_thanea_kunstmaan_extra.twig.content_type_twig_extension:
+        public: false
+        class: '%ars_thanea_kunstmaan_extra.twig.content_type_twig_extension.class%'
+        arguments: [ '@doctrine.orm.entity_manager', '@kunstmaan_extra.content_type' ]
+        tags:
+            - { name: twig.extension }
