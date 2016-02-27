@@ -2,6 +2,7 @@
 
 namespace ArsThanea\KunstmaanExtraBundle\SiteTree;
 
+use ArsThanea\KunstmaanExtraBundle\ContentCategory\Category;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
@@ -17,12 +18,17 @@ class PublicNodeVersions
     private $em;
 
     /**
-     * @var NodeVersion[][]
+     * @var NodeVersion[][]  (ref_name, ref_id) -> node_version
      */
     private $nodeVersions;
 
     /**
-     * @var array  node.internal_name -> branch
+     * @var Branch[]
+     */
+    private $branches;
+
+    /**
+     * @var Branch[]  node.internal_name -> branch
      */
     private $internalNodes = [];
 
@@ -30,11 +36,6 @@ class PublicNodeVersions
      * @var array  node_version.id -> ref_id
      */
     private $refs = [];
-
-    /**
-     * @var array  (ref_name, ref_id) -> node_id
-     */
-    private $nodeIds;
 
     /**
      * @var array  node_id -> ref_id
@@ -67,22 +68,6 @@ class PublicNodeVersions
     }
 
     /**
-     * @param string $refName
-     *
-     * @return NodeVersion[]
-     */
-    public function getNodesOfType($refName)
-    {
-        $this->initNodeVersions();
-
-        if (isset($this->nodeVersions[$refName])) {
-            return $this->nodeVersions[$refName] = array_map([$this, 'ensureEntity'], $this->nodeVersions[$refName]);
-        }
-
-        return [];
-    }
-
-    /**
      * @param HasNodeInterface $page
      *
      * @return \Kunstmaan\NodeBundle\Entity\NodeTranslation|null
@@ -107,6 +92,20 @@ class PublicNodeVersions
     }
 
     /**
+     * @param string $refName
+     *
+     * @return Branch[]
+     */
+    public function getBranchesOfType($refName)
+    {
+        $this->initNodeVersions();
+
+        return array_filter($this->branches, function (Branch $branch) use ($refName) {
+            return $refName === $branch->getRefName();
+        });
+    }
+
+    /**
      * @param HasNodeInterface $page
      *
      * @return integer
@@ -118,22 +117,11 @@ class PublicNodeVersions
         $refName = ClassLookup::getClass($page);
         $refId = $page->getId();
 
-        return isset($this->nodeIds[$refName][$refId]) ? $this->nodeIds[$refName][$refId] : null;
-    }
+        $branch = array_reduce($this->branches, function (Branch $result = null, Branch $branch) use ($refName, $refId) {
+            return ($refName === $branch->getRefName() && $refId === $branch->getRefId()) ? $branch : $result;
+        }, new Branch);
 
-    /**
-     * Get refId by refName and nodeId
-     *
-     * @param string $refName
-     * @param int    $nodeId
-     *
-     * @return integer|false
-     */
-    public function getCategoryRef($refName, $nodeId)
-    {
-        $this->initNodeVersions();
-
-        return array_search($nodeId, $this->nodeIds[$refName]);
+        return $branch->getNodeId();
     }
 
     /**
@@ -173,8 +161,23 @@ class PublicNodeVersions
     {
         $this->initNodeVersions();
 
-        return isset($this->internalNodes[$internalName]) ? $this->internalNodes[$internalName] : null;
+        return array_reduce($this->branches, function (Branch $result = null, Branch $branch) use ($internalName) {
+            return ($internalName === $branch->getInternalName()) ? $branch : $result;
+        });
+    }
 
+    /**
+     * @param Category $category
+     *
+     * @return Branch|null
+     */
+    public function getBranchByCategory(Category $category)
+    {
+        $this->initNodeVersions();
+
+        return array_reduce($this->branches, function (Branch $result = null, Branch $branch) use ($category) {
+            return ($category->getNodeId() === $branch->getNodeId()) ? $branch : $result;
+        });
     }
 
     private function initNodeVersions()
@@ -189,6 +192,7 @@ class PublicNodeVersions
             ->innerJoin('nt.node', 'n')
             ->where('nt.online = 1')
             ->andWhere('n.deleted = 0')
+            ->orderBy('n.lvl, nt.weight')
             ->getQuery()
             ->getResult(AbstractQuery::HYDRATE_ARRAY);
 
@@ -198,8 +202,12 @@ class PublicNodeVersions
             $branch = new Branch($item['title'], $item['nodeId'], $item['url'], $item['refId'], $item['refEntityName'], $item['internalName']);
 
             $this->nodeVersions[$branch->getRefName()][$branch->getRefId()] = $id;
-            $this->nodeIds[$branch->getRefName()][$branch->getRefId()] = $branch->getNodeId();
-            $this->internalNodes[$branch->getInternalName()] = $branch;
+
+            $this->branches[] = $branch;
+
+//            $this->branches[$branch->getRefName()][$branch->getRefId()] = $branch;
+//            $this->internalNodes[$branch->getInternalName()] = $branch;
+
             $this->refs[$id] = $branch->getRefId();
             $this->nodeRefs[$branch->getNodeId()] = $branch->getRefId();
         }

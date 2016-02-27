@@ -31,7 +31,7 @@ class SiteTreeTwigExtension extends \Twig_Extension
         ];
     }
 
-    public function getPageChildren(HasNodeInterface $page, $ofType = null, array $options = [])
+    public function getPageChildren($page, $ofType = null, array $options = [])
     {
         return $this->siteTree->getChildren($page, $options + [
                 'depth' => 0,

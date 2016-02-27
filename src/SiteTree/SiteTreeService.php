@@ -2,6 +2,7 @@
 
 namespace ArsThanea\KunstmaanExtraBundle\SiteTree;
 
+use ArsThanea\KunstmaanExtraBundle\ContentCategory\Category;
 use Doctrine\ORM\Query\Expr\Join;
 use Kunstmaan\NodeBundle\Entity\HasNodeInterface;
 use Kunstmaan\NodeBundle\Entity\Node;
@@ -42,6 +43,8 @@ class SiteTreeService
     {
         if ($parent instanceof HasNodeInterface) {
             $node = $this->publicNodeVersions->getNodeFor($parent);
+        } elseif ($parent instanceof Category) {
+            $node = $this->nodeRepository->find($parent->getId());
         } elseif ($parent instanceof Node) {
             $node = $parent;
         } else {

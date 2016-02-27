@@ -31,7 +31,6 @@ class NodeVersionsTwigExtension extends \Twig_Extension
             new \Twig_SimpleFilter('to_node', [$this->nodeVersions, 'getNodeFor']),
             new \Twig_SimpleFilter('to_node_version', [$this->nodeVersions, 'getNodeVersionFor']),
             new \Twig_SimpleFilter('to_node_translation', [$this->nodeVersions, 'getNodeTranslationFor']),
-            new \Twig_SimpleFilter('to_*_page', [$this, 'categoryToPage']),
         ];
     }
 
@@ -39,34 +38,18 @@ class NodeVersionsTwigExtension extends \Twig_Extension
     {
         return [
             'internal_node' => new \Twig_SimpleFunction('internal_node', [$this->nodeVersions, 'getBranchByInternalName']),
-            'get_*_pages' => new \Twig_SimpleFunction('get_*_pages', [$this, 'getPagesOfType']),
+            'get_*_pages' => new \Twig_SimpleFunction('get_*_pages', [$this, 'getBranchesOfType']),
         ];
     }
 
-
-    public function categoryToPage($type, Category $category = null)
-    {
-        if (null === $category) {
-            return null;
-        }
-
-        $class = $this->contentTypeService->getContentTypeClass($type);
-        if (null === $class) {
-            throw new \InvalidArgumentException("Can’t find page class name for $type");
-        }
-
-        return $this->nodeVersions->getCategoryRef($class, $category->getNodeId());
-
-    }
-
-    public function getPagesOfType($type)
+    public function getBranchesOfType($type)
     {
         $class = $this->contentTypeService->getContentTypeClass($type);
         if (null === $class) {
             throw new \InvalidArgumentException("Can’t find page class name for $type");
         }
 
-        return $this->nodeVersions->getNodesOfType($class);
+        return $this->nodeVersions->getBranchesOfType($class);
     }
 
     /**
