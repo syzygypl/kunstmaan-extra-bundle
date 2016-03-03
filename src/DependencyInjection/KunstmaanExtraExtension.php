@@ -29,6 +29,7 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('twig_extensions.yml');
+        $loader->load('form_types.yml');
         $loader->load('ref_id_providers.yml');
 
         if ($configs['assets']['web_prefix']) {

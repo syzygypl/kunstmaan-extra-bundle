@@ -84,7 +84,8 @@ class NodeEntityType extends DoctrineType
             'required'        => false,
         ]);
 
-        $resolver->isRequired('page_name');
+        $resolver->setRequired('page_name');
+
     }
 
 }
