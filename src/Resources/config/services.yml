@@ -40,7 +40,7 @@ services:
 
     kunstmaan_extra.page_url:
         class: '%kunstmaan_extra.page_url.class%'
-        arguments: [ '@kunstmaan_extra.public_node_versions', '@kunstmaan_redirect.redirectrouter' ]
+        arguments: [ '@kunstmaan_extra.public_node_versions', '@router' ]
 
     ars_thanea_kunstmaan_extra.request_param_converter.page_param_converter:
         public: false
