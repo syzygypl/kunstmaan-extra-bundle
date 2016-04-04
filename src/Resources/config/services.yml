@@ -33,10 +33,10 @@ services:
         arguments:
           - '@ars_thanea_kunstmaan_extra.node_repository'
           - '@kunstmaan_extra.public_node_versions'
-          - "%defaultlocale%"
+          - '@kunstmaan_admin.domain_configuration'
 
     kunstmaan_extra.site_tree.branch_utilities_service:
-        class: ArsThanea\KunstmaanExtraBundle\SiteTree\BranchUtilitiesService
+        class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\BranchUtilitiesService'
 
     kunstmaan_extra.page_url:
         class: '%kunstmaan_extra.page_url.class%'
@@ -44,7 +44,7 @@ services:
 
     ars_thanea_kunstmaan_extra.request_param_converter.page_param_converter:
         public: false
-        class: ArsThanea\KunstmaanExtraBundle\Request\ParamConverter\PageParamConverter
+        class: 'ArsThanea\KunstmaanExtraBundle\Request\ParamConverter\PageParamConverter'
         arguments: [ '@doctrine', '@kunstmaan_extra.content_type' ]
         tags:
             - { name: request.param_converter }

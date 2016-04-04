@@ -33,7 +33,7 @@ services:
     ars_thanea_kunstmaan_extra.twig.site_tree_twig_extension:
         public: false
         class: '%ars_thanea_kunstmaan_extra.twig.site_tree_twig_extension.class%'
-        arguments: [ '@kunstmaan_extra.content_type', '@kunstmaan_extra.site_tree' ]
+        arguments: [ '@kunstmaan_extra.content_type', '@kunstmaan_extra.site_tree', '@kunstmaan_admin.domain_configuration' ]
         tags:
             - { name: twig.extension }
 

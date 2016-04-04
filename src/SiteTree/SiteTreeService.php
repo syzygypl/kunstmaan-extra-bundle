@@ -4,6 +4,7 @@ namespace ArsThanea\KunstmaanExtraBundle\SiteTree;
 
 use ArsThanea\KunstmaanExtraBundle\ContentCategory\Category;
 use Doctrine\ORM\Query\Expr\Join;
+use Kunstmaan\AdminBundle\Helper\DomainConfigurationInterface;
 use Kunstmaan\NodeBundle\Entity\HasNodeInterface;
 use Kunstmaan\NodeBundle\Entity\Node;
 use Kunstmaan\NodeBundle\Repository\NodeRepository;
@@ -22,22 +23,22 @@ class SiteTreeService
     private $publicNodeVersions;
 
     /**
-     * @var string
+     * @var DomainConfigurationInterface
      */
-    private $lang;
+    private $domainConfiguration;
 
-    public function __construct(NodeRepository $nodeRepository, PublicNodeVersions $publicNodeVersions, $lang)
+    public function __construct(NodeRepository $nodeRepository, PublicNodeVersions $publicNodeVersions, DomainConfigurationInterface $domainConfiguration)
     {
         $this->nodeRepository = $nodeRepository;
         $this->publicNodeVersions = $publicNodeVersions;
-        $this->lang = $lang;
+        $this->domainConfiguration = $domainConfiguration;
     }
 
     /**
      * @param HasNodeInterface|Node|null $parent
      * @param array                      $options
      *
-     * @return Branch|null
+     * @return Branch
      */
     public function getChildren($parent = null, array $options = [])
     {
@@ -66,6 +67,7 @@ class SiteTreeService
             'depth'           => 1,
             'refName'         => null,
             'parent'          => null,
+            'lang'            => $this->domainConfiguration->getDefaultLocale(),
             'include_root'    => false,
             'include_hidden'  => false,
             'include_offline' => false,
@@ -90,7 +92,7 @@ class SiteTreeService
             ->where('nt.lang = :lang')
             ->andWhere('node.deleted = 0')
             ->orderBy('node.lvl, nt.weight')
-            ->setParameter('lang', $this->lang);
+            ->setParameter('lang', $options['lang']);
 
         if ($options['limit']) {
             $qb->setMaxResults($options['limit']);

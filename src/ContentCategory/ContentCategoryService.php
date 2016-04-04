@@ -39,6 +39,18 @@ class ContentCategoryService implements ContentCategoryInterface
      *
      * @return Category
      */
+    public function getRootCategory(HasNodeInterface $page)
+    {
+        $breadcrumbs = $this->getBreadcrumbs($page);
+
+        return reset($breadcrumbs);
+    }
+
+    /**
+     * @param HasNodeInterface $page
+     *
+     * @return Category
+     */
     public function getMainCategory(HasNodeInterface $page)
     {
         $breadcrumbs = $this->getBreadcrumbs($page);

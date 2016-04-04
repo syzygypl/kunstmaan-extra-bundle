@@ -12,6 +12,13 @@ interface ContentCategoryInterface
      *
      * @return Category
      */
+    public function getRootCategory(HasNodeInterface $page);
+
+    /**
+     * @param HasNodeInterface $page
+     *
+     * @return Category
+     */
     public function getMainCategory(HasNodeInterface $page);
 
     /**

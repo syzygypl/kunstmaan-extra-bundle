@@ -5,6 +5,7 @@ namespace ArsThanea\KunstmaanExtraBundle\Twig;
 use ArsThanea\KunstmaanExtraBundle\ContentCategory\Category;
 use ArsThanea\KunstmaanExtraBundle\ContentCategory\ContentCategoryInterface;
 use Kunstmaan\NodeBundle\Entity\AbstractPage;
+use Kunstmaan\NodeBundle\Entity\HasNodeInterface;
 use Kunstmaan\UtilitiesBundle\Helper\SlugifierInterface;
 
 class ContentCategoryTwigExtension extends \Twig_Extension
@@ -28,11 +29,33 @@ class ContentCategoryTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('main_category', [$this->categoryService, 'getMainCategory']),
-            new \Twig_SimpleFunction('parent_category', [$this->categoryService, 'getParentCategory']),
-            new \Twig_SimpleFunction('get_breadcrumbs', [$this->categoryService, 'getBreadcrumbs']),
+            new \Twig_SimpleFunction('root_category', [$this, 'getRootCategory']),
+            new \Twig_SimpleFunction('main_category', [$this, 'getMainCategory']),
+            new \Twig_SimpleFunction('parent_category', [$this, 'getParentCategory']),
+            new \Twig_SimpleFunction('get_breadcrumbs', [$this, 'getBreadcrumbs']),
         ];
     }
+
+    public function getRootCategory(HasNodeInterface $page)
+    {
+        return $this->categoryService->getRootCategory($page);
+    }
+
+    public function getMainCategory(HasNodeInterface $page)
+    {
+        return $this->categoryService->getMainCategory($page);
+    }
+
+    public function getParentCategory(HasNodeInterface $page)
+    {
+        return $this->categoryService->getParentCategory($page);
+    }
+
+    public function getBreadcrumbs(HasNodeInterface $page)
+    {
+        return $this->categoryService->getBreadcrumbs($page);
+    }
+
 
     public function getTests()
     {
