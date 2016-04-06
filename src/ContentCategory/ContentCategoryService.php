@@ -93,17 +93,18 @@ class ContentCategoryService implements ContentCategoryInterface
             return $this->cache->fetch($key);
         }
 
-        $node = $this->nodeVersions->getNodeFor($page);
+        $nodeTranslation = $this->nodeVersions->getNodeTranslationFor($page);
 
-        if (null === $node) {
+        if (null === $nodeTranslation) {
             throw new \RuntimeException(sprintf('Cant find node for %s:%d page', get_class($page), $page->getId()));
         }
 
-        $breadcrumbs = $this->breadCrumbsService->getNodePath($node);
+        $lang = $nodeTranslation->getLang();
+        $breadcrumbs = $this->breadCrumbsService->getNodePath($nodeTranslation->getNode());
 
         $parents = (new ArrayCollection($breadcrumbs))
             ->filter(function (Node $node) use ($full) { return $full || false === $node->isHiddenFromNav(); })
-            ->map(function (Node $node) { return $node->getNodeTranslations(true)->first(); })
+            ->map(function (Node $node) use ($lang) { return $node->getNodeTranslation($lang, true); })
             ->map(function (NodeTranslation $nt) { return $this->nodeTranslationToCategory($nt); })
             ->toArray();
 

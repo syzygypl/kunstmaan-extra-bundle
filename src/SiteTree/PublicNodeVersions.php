@@ -18,6 +18,11 @@ class PublicNodeVersions
     private $em;
 
     /**
+     * @var CurrentLocaleInterface
+     */
+    private $currentLocale;
+
+    /**
      * @var NodeVersion[][]  (ref_name, ref_id) -> node_version
      */
     private $nodeVersions;
@@ -26,11 +31,6 @@ class PublicNodeVersions
      * @var Branch[]
      */
     private $branches;
-
-    /**
-     * @var Branch[]  node.internal_name -> branch
-     */
-    private $internalNodes = [];
 
     /**
      * @var array  node_version.id -> ref_id
@@ -42,9 +42,10 @@ class PublicNodeVersions
      */
     private $nodeRefs = [];
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, CurrentLocaleInterface $currentLocale)
     {
         $this->em = $em;
+        $this->currentLocale = $currentLocale;
     }
 
     /**
@@ -92,16 +93,21 @@ class PublicNodeVersions
     }
 
     /**
+     * Warning: passing `0` as $lang will skip the language check (since 0 == "string")
+     *
      * @param string $refName
+     * @param string $lang
      *
      * @return Branch[]
      */
-    public function getBranchesOfType($refName)
+    public function getBranchesOfType($refName, $lang = null)
     {
         $this->initNodeVersions();
 
-        return array_filter($this->branches, function (Branch $branch) use ($refName) {
-            return $refName === $branch->getRefName();
+        $lang = null !== $lang ? $lang : $this->currentLocale->getCurrentLocale();
+
+        return array_filter($this->branches, function (Branch $branch) use ($refName, $lang) {
+            return $refName === $branch->getRefName() && $lang /* don’t use identity! */ == $branch->getLang();
         });
     }
 
@@ -119,9 +125,9 @@ class PublicNodeVersions
 
         $branch = array_reduce($this->branches, function (Branch $result = null, Branch $branch) use ($refName, $refId) {
             return ($refName === $branch->getRefName() && $refId === $branch->getRefId()) ? $branch : $result;
-        }, new Branch);
+        });
 
-        return $branch->getNodeId();
+        return $branch ? $branch->getNodeId() : null;
     }
 
     /**
@@ -142,41 +148,58 @@ class PublicNodeVersions
      * Gets Page Id for given Node Id
      *
      * @param integer $nodeId
+     * @param string  $lang
      *
-     * @return integer|null
+     * @return int|null
      */
-    public function getNodeRef($nodeId)
+    public function getNodeRef($nodeId, $lang = null)
     {
         $this->initNodeVersions();
 
-        return isset($this->nodeRefs[$nodeId]) ? $this->nodeRefs[$nodeId] : null;
+        $lang = $lang ?: $this->currentLocale->getCurrentLocale();
+
+        return isset($this->nodeRefs[$lang][$nodeId]) ? $this->nodeRefs[$lang][$nodeId] : null;
     }
 
     /**
      * @param string $internalName
+     * @param string $lang
      *
      * @return Branch|null
      */
-    public function getBranchByInternalName($internalName)
+    public function getBranchByInternalName($internalName, $lang = null)
     {
         $this->initNodeVersions();
 
-        return array_reduce($this->branches, function (Branch $result = null, Branch $branch) use ($internalName) {
-            return ($internalName === $branch->getInternalName()) ? $branch : $result;
+        $lang = $lang ?: $this->currentLocale->getCurrentLocale();
+
+        $matches = function (Branch $branch) use ($internalName, $lang) {
+            return $internalName === $branch->getInternalName() && $lang === $branch->getLang();
+        };
+
+        return array_reduce($this->branches, function (Branch $result = null, Branch $branch) use ($matches) {
+            return $matches($branch) ? $branch : $result;
         });
     }
 
     /**
      * @param Category $category
+     * @param string   $lang
      *
      * @return Branch|null
      */
-    public function getBranchByCategory(Category $category)
+    public function getBranchByCategory(Category $category, $lang = null)
     {
         $this->initNodeVersions();
 
-        return array_reduce($this->branches, function (Branch $result = null, Branch $branch) use ($category) {
-            return ($category->getNodeId() === $branch->getNodeId()) ? $branch : $result;
+        $lang = $lang ?: $this->currentLocale->getCurrentLocale();
+
+        $matches = function (Branch $branch) use ($category, $lang) {
+            return $category->getNodeId() === $branch->getNodeId() && $lang === $branch->getLang();
+        };
+
+        return array_reduce($this->branches, function (Branch $result = null, Branch $branch) use ($matches) {
+            return  $matches($branch) ? $branch : $result;
         });
     }
 
@@ -187,7 +210,7 @@ class PublicNodeVersions
         }
 
         $results = $this->em->getRepository('KunstmaanNodeBundle:NodeVersion')->createQueryBuilder('nv')
-            ->select('nv.refEntityName', 'nv.refId', 'nv.id', 'n.internalName', 'nt.url', 'nt.title', 'n.id as nodeId')
+            ->select('nv.refEntityName', 'nv.refId', 'nv.id', 'n.internalName', 'nt.url', 'nt.lang', 'nt.title', 'n.id as nodeId')
             ->innerJoin('nv.nodeTranslation', 'nt', Join::WITH, 'nt.publicNodeVersion = nv.id')
             ->innerJoin('nt.node', 'n')
             ->where('nt.online = 1')
@@ -199,17 +222,14 @@ class PublicNodeVersions
         foreach ($results as $item) {
 
             $id = $item['id'];
-            $branch = new Branch($item['title'], $item['nodeId'], $item['url'], $item['refId'], $item['refEntityName'], $item['internalName']);
+            $branch = new Branch($item['title'], $item['nodeId'], $item['url'], $item['lang'], $item['refId'], $item['refEntityName'], $item['internalName']);
 
             $this->nodeVersions[$branch->getRefName()][$branch->getRefId()] = $id;
 
             $this->branches[] = $branch;
 
-//            $this->branches[$branch->getRefName()][$branch->getRefId()] = $branch;
-//            $this->internalNodes[$branch->getInternalName()] = $branch;
-
             $this->refs[$id] = $branch->getRefId();
-            $this->nodeRefs[$branch->getNodeId()] = $branch->getRefId();
+            $this->nodeRefs[$item['lang']][$branch->getNodeId()] = $branch->getRefId();
         }
     }
 

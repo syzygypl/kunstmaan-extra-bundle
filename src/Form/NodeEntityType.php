@@ -3,10 +3,12 @@
 namespace ArsThanea\KunstmaanExtraBundle\Form;
 
 use ArsThanea\KunstmaanExtraBundle\ContentType\PageContentTypeInterface;
+use ArsThanea\KunstmaanExtraBundle\SiteTree\CurrentLocaleInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Kunstmaan\AdminBundle\Helper\DomainConfigurationInterface;
 use Kunstmaan\NodeBundle\Entity\Node;
 use Kunstmaan\NodeBundle\Entity\NodeTranslation;
 use Kunstmaan\NodeBundle\Entity\NodeVersion;
@@ -22,20 +24,29 @@ class NodeEntityType extends DoctrineType
 {
 
     /**
-     * @var ManagerRegistry
-     */
-    private $doctrine;
-
-    /**
      * @var PageContentTypeInterface
      */
     private $contentTypeService;
 
-    public function __construct(ManagerRegistry $doctrine, PageContentTypeInterface $contentTypeService)
-    {
+    /**
+     * @var DomainConfigurationInterface
+     */
+    private $domainConfiguration;
+    /**
+     * @var CurrentLocaleInterface
+     */
+    private $currentLocale;
+
+    public function __construct(
+        ManagerRegistry $doctrine,
+        PageContentTypeInterface $contentTypeService,
+        DomainConfigurationInterface $domainConfiguration,
+        CurrentLocaleInterface $currentLocale
+    ) {
         parent::__construct($doctrine);
-        $this->doctrine = $doctrine;
         $this->contentTypeService = $contentTypeService;
+        $this->domainConfiguration = $domainConfiguration;
+        $this->currentLocale = $currentLocale;
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -65,6 +76,14 @@ class NodeEntityType extends DoctrineType
         $queryBuilder->andWhere($queryBuilder->expr()->eq('nt.online', 1));
         $queryBuilder->setParameter("ref_name", $class);
 
+        if (null !== $queryBuilder->getParameter('left') && null !== $queryBuilder->getParameter('right')) {
+            $queryBuilder->andWhere('n.lft >= :left')->andWhere('n.rgt <= :right');
+        }
+
+        if (null !== $queryBuilder->getParameter('lang')) {
+            $queryBuilder->andWhere('nt.lang = :lang');
+        }
+
         return new ORMQueryBuilderLoader(
             $queryBuilder,
             $manager,
@@ -77,13 +96,36 @@ class NodeEntityType extends DoctrineType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'advanced_select' => true,
+            'root_node'       => function () {
+                return $this->domainConfiguration->getRootNode();
+            },
+            'lang'            => function () {
+                return $this->currentLocale->getCurrentLocale();
+            },
             'class'           => function (Options $options) {
                 return $this->contentTypeService->getContentTypeClass($options['page_name']);
+            },
+            'query_builder'   => function (Options $options) {
+                /** @var QueryBuilder $qb */
+                $qb = $options['em']->getRepository($options['class'])->createQueryBuilder('e');
+
+                $node = $options['root_node'];
+                if ($node instanceof Node) {
+                    $qb->setParameters([
+                        'left' => $node->getLeft(),
+                        'right' => $node->getRight(),
+                    ]);
+                }
+
+                $qb->setParameter('lang', $options['lang']);
+
+                return $qb;
             },
             'empty_value'     => ' ',
             'required'        => false,
         ]);
 
+        $resolver->setAllowedTypes('root_node', Node::class);
         $resolver->setRequired('page_name');
 
     }

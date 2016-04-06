@@ -5,12 +5,16 @@ services:
 
     ars_thanea_kunstmaan_extra.form.node_entity_type:
         class: 'ArsThanea\KunstmaanExtraBundle\Form\NodeEntityType'
-        arguments: [ '@doctrine', '@kunstmaan_extra.content_type' ]
+        arguments:
+          - '@doctrine'
+          - '@kunstmaan_extra.content_type'
+          - '@kunstmaan_admin.domain_configuration'
+          - '@kunstmaan_extra.site_tree.current_locale'
         tags:
             - { name: form.type }
 
     ars_thanea_kunstmaan_extra.form.page_url_type:
-        class: ArsThanea\KunstmaanExtraBundle\Form\PageUrlType
+        class: 'ArsThanea\KunstmaanExtraBundle\Form\PageUrlType'
         arguments: [ '@ars_thanea_kunstmaan_extra.form.transformer.node_translation_to_url_transformer' ]
         tags:
             - { name: form.type }
@@ -18,4 +22,6 @@ services:
     ars_thanea_kunstmaan_extra.form.transformer.node_translation_to_url_transformer:
         public: false
         class: '%ars_thanea_kunstmaan_extra.form.transformer.node_translation_to_url_transformer.class%'
-        arguments: [ '@ars_thanea_kunstmaan_extra.node_translation_repository' ]
+        arguments:
+         - '@ars_thanea_kunstmaan_extra.node_translation_repository'
+         - '@kunstmaan_extra.site_tree.current_locale'

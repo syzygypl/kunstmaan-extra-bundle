@@ -4,7 +4,6 @@ namespace ArsThanea\KunstmaanExtraBundle\SiteTree;
 
 use ArsThanea\KunstmaanExtraBundle\ContentCategory\Category;
 use Doctrine\ORM\Query\Expr\Join;
-use Kunstmaan\AdminBundle\Helper\DomainConfigurationInterface;
 use Kunstmaan\NodeBundle\Entity\HasNodeInterface;
 use Kunstmaan\NodeBundle\Entity\Node;
 use Kunstmaan\NodeBundle\Repository\NodeRepository;
@@ -21,17 +20,16 @@ class SiteTreeService
      * @var PublicNodeVersions
      */
     private $publicNodeVersions;
-
     /**
-     * @var DomainConfigurationInterface
+     * @var CurrentLocaleInterface
      */
-    private $domainConfiguration;
+    private $currentLocale;
 
-    public function __construct(NodeRepository $nodeRepository, PublicNodeVersions $publicNodeVersions, DomainConfigurationInterface $domainConfiguration)
+    public function __construct(NodeRepository $nodeRepository, PublicNodeVersions $publicNodeVersions, CurrentLocaleInterface $currentLocale)
     {
         $this->nodeRepository = $nodeRepository;
         $this->publicNodeVersions = $publicNodeVersions;
-        $this->domainConfiguration = $domainConfiguration;
+        $this->currentLocale = $currentLocale;
     }
 
     /**
@@ -67,7 +65,7 @@ class SiteTreeService
             'depth'           => 1,
             'refName'         => null,
             'parent'          => null,
-            'lang'            => $this->domainConfiguration->getDefaultLocale(),
+            'lang'            => $this->currentLocale->getCurrentLocale(),
             'include_root'    => false,
             'include_hidden'  => false,
             'include_offline' => false,
@@ -88,7 +86,7 @@ class SiteTreeService
             ->leftJoin('node.nodeTranslations', 'nt', Join::WITH, 'nt.node = node and nt.lang = :lang')
             ->leftJoin('nt.publicNodeVersion', 'nv')
             ->leftJoin('node.parent', 'parent')
-            ->select('parent.id as parentId', 'node.id', 'nt.title', 'nt.url', 'nv.refId', 'nv.refEntityName', 'node.internalName')
+            ->select('parent.id as parentId', 'node.id', 'nt.title', 'nt.url', 'nt.lang', 'nv.refId', 'nv.refEntityName', 'node.internalName')
             ->where('nt.lang = :lang')
             ->andWhere('node.deleted = 0')
             ->orderBy('node.lvl, nt.weight')
@@ -141,7 +139,7 @@ class SiteTreeService
 
         /** @noinspection PhpInternalEntityUsedInspection */
         return array_reduce($children, function (TreeBuilder $treeBuilder, $item) use ($nodeId) {
-            $branch = new Branch($item['title'], $item['id'], $item['url'], $item['refId'], $item['refEntityName'], $item['internalName']);
+            $branch = new Branch($item['title'], $item['id'], $item['url'], $item['lang'], $item['refId'], $item['refEntityName'], $item['internalName']);
 
             return $treeBuilder->add($branch->getNodeId() === $nodeId ? null : $item['parentId'], $branch);
         }, new TreeBuilder)->getRoot();

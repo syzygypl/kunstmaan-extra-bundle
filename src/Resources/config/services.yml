@@ -1,6 +1,7 @@
 parameters:
     kunstmaan_extra.public_node_versions.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\PublicNodeVersions'
     kunstmaan_extra.content_category.class: 'ArsThanea\KunstmaanExtraBundle\ContentCategory\ContentCategoryService'
+    kunstmaan_extra.site_tree.current_locale.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\CurrentLocale'
     kunstmaan_extra.site_tree.bread_crumbs.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\BreadCrumbsService'
     kunstmaan_extra.content_type.class: 'ArsThanea\KunstmaanExtraBundle\ContentType\ContentTypeService'
     kunstmaan_extra.site_tree.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\SiteTreeService'
@@ -9,7 +10,7 @@ parameters:
 services:
     kunstmaan_extra.public_node_versions:
         class: '%kunstmaan_extra.public_node_versions.class%'
-        arguments: [ '@doctrine.orm.entity_manager' ]
+        arguments: [ '@doctrine.orm.entity_manager', '@kunstmaan_extra.site_tree.current_locale' ]
 
     kunstmaan_extra.content_category:
         class: '%kunstmaan_extra.content_category.class%'
@@ -18,9 +19,13 @@ services:
           - '@kunstmaan_extra.public_node_versions'
           - '@kunstmaan_extra.site_tree.bread_crumbs'
 
+    kunstmaan_extra.site_tree.current_locale:
+        class: '%kunstmaan_extra.site_tree.current_locale.class%'
+        arguments: [ '@request_stack', '@kunstmaan_admin.domain_configuration' ]
+
     kunstmaan_extra.site_tree.bread_crumbs:
         class: '%kunstmaan_extra.site_tree.bread_crumbs.class%'
-        arguments: [ '@ars_thanea_kunstmaan_extra.node_repository', "%defaultlocale%" ]
+        arguments: [ '@ars_thanea_kunstmaan_extra.node_repository', '@kunstmaan_extra.site_tree.current_locale' ]
 
 
     kunstmaan_extra.content_type:
@@ -33,7 +38,7 @@ services:
         arguments:
           - '@ars_thanea_kunstmaan_extra.node_repository'
           - '@kunstmaan_extra.public_node_versions'
-          - '@kunstmaan_admin.domain_configuration'
+          - '@kunstmaan_extra.site_tree.current_locale'
 
     kunstmaan_extra.site_tree.branch_utilities_service:
         class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\BranchUtilitiesService'

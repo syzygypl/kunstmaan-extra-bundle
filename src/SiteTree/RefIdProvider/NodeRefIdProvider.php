@@ -3,6 +3,7 @@
 
 namespace ArsThanea\KunstmaanExtraBundle\SiteTree\RefIdProvider;
 
+use ArsThanea\KunstmaanExtraBundle\SiteTree\CurrentLocaleInterface;
 use ArsThanea\KunstmaanExtraBundle\SiteTree\HasRefInterface;
 use Kunstmaan\NodeBundle\Entity\HasNodeInterface;
 use Kunstmaan\NodeBundle\Entity\Node;
@@ -11,6 +12,19 @@ use Kunstmaan\NodeBundle\Entity\NodeVersion;
 
 class NodeRefIdProvider implements RefIdProviderInterface
 {
+
+    /**
+     * @var CurrentLocaleInterface
+     */
+    private $currentLocale;
+
+    /**
+     * @param CurrentLocaleInterface $currentLocale
+     */
+    public function __construct(CurrentLocaleInterface $currentLocale)
+    {
+        $this->currentLocale = $currentLocale;
+    }
 
     /**
      * @param mixed $value
@@ -30,12 +44,16 @@ class NodeRefIdProvider implements RefIdProviderInterface
             return $value->getId();
         } elseif ($value instanceof HasRefInterface) {
             return $value->getRefId();
-        } elseif ($value instanceof Node) {
-            return $value->getNodeTranslations(true)->first()->getPublicNodeVersion()->getRefId();
-        } elseif ($value instanceof NodeTranslation) {
-            return $value->getPublicNodeVersion()->getRefId();
         } elseif ($value instanceof NodeVersion) {
             return $value->getRefId();
+        } elseif ($value instanceof NodeTranslation) {
+            $nodeVersion = $value->getPublicNodeVersion();
+
+            return $nodeVersion ? $nodeVersion->getRefId() : null;
+        } elseif ($value instanceof Node) {
+            $nodeTranslation = $value->getNodeTranslation($this->currentLocale->getCurrentLocale(), true);
+
+            return $nodeTranslation ? $nodeTranslation->getPublicNodeVersion()->getRefId() : null;
         }
 
         return null;

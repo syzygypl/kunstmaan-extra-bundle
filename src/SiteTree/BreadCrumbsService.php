@@ -15,15 +15,9 @@ class BreadCrumbsService
      */
     private $nodeRepository;
 
-    /**
-     * @var string
-     */
-    private $lang;
-
-    public function __construct(NodeRepository $nodeRepository, $lang)
+    public function __construct(NodeRepository $nodeRepository)
     {
         $this->nodeRepository = $nodeRepository;
-        $this->lang = $lang;
     }
 
     /**
@@ -31,14 +25,14 @@ class BreadCrumbsService
      *
      * @param Node $node
      *
+     * @return \Kunstmaan\NodeBundle\Entity\Node[]
      * @see getBreadCrumbs
      * @see getParents
      *
-     * @return Node[]
      */
     public function getNodePath(Node $node)
     {
-        return $this->nodeRepository->getAllParents($node, $this->lang);
+        return $this->nodeRepository->getAllParents($node);
     }
 
     /**

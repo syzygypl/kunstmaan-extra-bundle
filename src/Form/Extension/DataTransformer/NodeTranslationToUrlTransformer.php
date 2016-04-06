@@ -2,6 +2,7 @@
 
 namespace ArsThanea\KunstmaanExtraBundle\Form\Extension\DataTransformer;
 
+use ArsThanea\KunstmaanExtraBundle\SiteTree\CurrentLocaleInterface;
 use Kunstmaan\NodeBundle\Entity\NodeTranslation;
 use Kunstmaan\NodeBundle\Repository\NodeTranslationRepository;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -13,10 +14,15 @@ class NodeTranslationToUrlTransformer implements DataTransformerInterface
      * @var NodeTranslationRepository
      */
     private $repository;
+    /**
+     * @var CurrentLocaleInterface
+     */
+    private $currentLocale;
 
-    public function __construct(NodeTranslationRepository $repository)
+    public function __construct(NodeTranslationRepository $repository, CurrentLocaleInterface $currentLocale)
     {
         $this->repository = $repository;
+        $this->currentLocale = $currentLocale;
     }
 
 
@@ -49,7 +55,9 @@ class NodeTranslationToUrlTransformer implements DataTransformerInterface
             return null;
         }
 
-        $nodeTranslation = $this->repository->getNodeTranslationForUrl(ltrim($value, '/'));
+        $locale = $this->currentLocale->getCurrentLocale();
+
+        $nodeTranslation = $this->repository->getNodeTranslationForUrl(ltrim($value, '/'), $locale);
 
         if (null === $nodeTranslation) {
             throw new TransformationFailedException('Cannot find nodeTranslation for given URL');

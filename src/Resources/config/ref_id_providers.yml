@@ -23,6 +23,7 @@ services:
 
     ars_thanea_kunstmaan_extra.site_tree.ref.node:
         public: false
+        arguments: [ '@kunstmaan_extra.site_tree.current_locale' ]
         class: '%ars_thanea_kunstmaan_extra.site_tree.ref.node.class%'
         tags:
           - name: kunstmaan_extra.ref_id_provider

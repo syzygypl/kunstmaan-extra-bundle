@@ -2,7 +2,6 @@
 
 namespace ArsThanea\KunstmaanExtraBundle\Twig;
 
-use ArsThanea\KunstmaanExtraBundle\ContentCategory\Category;
 use ArsThanea\KunstmaanExtraBundle\ContentType\PageContentTypeInterface;
 use ArsThanea\KunstmaanExtraBundle\SiteTree\PublicNodeVersions;
 
@@ -42,14 +41,14 @@ class NodeVersionsTwigExtension extends \Twig_Extension
         ];
     }
 
-    public function getBranchesOfType($type)
+    public function getBranchesOfType($type, $lang = null)
     {
         $class = $this->contentTypeService->getContentTypeClass($type);
         if (null === $class) {
             throw new \InvalidArgumentException("Can’t find page class name for $type");
         }
 
-        return $this->nodeVersions->getBranchesOfType($class);
+        return $this->nodeVersions->getBranchesOfType($class, $lang);
     }
 
     /**

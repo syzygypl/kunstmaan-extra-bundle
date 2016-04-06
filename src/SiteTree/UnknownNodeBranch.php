@@ -12,7 +12,7 @@ class UnknownNodeBranch extends Branch
 
     public function __construct(Branch $branch = null)
     {
-        parent::__construct(null, null, null, null, null, null);
+        parent::__construct(null, null, null, null, null, null, null);
         if ($branch) {
             $this->add($branch);
         }
@@ -26,6 +26,11 @@ class UnknownNodeBranch extends Branch
     public function getSlug()
     {
         throw new \LogicException('This is an unknow node, you can’t query it for slug');
+    }
+
+    public function getLang()
+    {
+        throw new \LogicException('This is an unknow node, you can’t query it for lang');
     }
 
     public function getRefId()

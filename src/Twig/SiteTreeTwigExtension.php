@@ -5,10 +5,6 @@ namespace ArsThanea\KunstmaanExtraBundle\Twig;
 use ArsThanea\KunstmaanExtraBundle\ContentType\PageContentTypeInterface;
 use ArsThanea\KunstmaanExtraBundle\SiteTree\SiteTreeService;
 use Kunstmaan\AdminBundle\Helper\DomainConfigurationInterface;
-use Kunstmaan\NodeBundle\Entity\HasNodeInterface;
-use Symfony\Bridge\Twig\AppVariable;
-use Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class SiteTreeTwigExtension extends \Twig_Extension
 {
@@ -37,21 +33,12 @@ class SiteTreeTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'get_page_children' => new \Twig_SimpleFunction('get_page_children', [$this, 'getPageChildren'], ['needs_context' => true]),
+            'get_page_children' => new \Twig_SimpleFunction('get_page_children', [$this, 'getPageChildren']),
         ];
     }
 
-    public function getPageChildren(array $context, $page = null, $ofType = null, array $options = [])
+    public function getPageChildren($page = null, $ofType = null, array $options = [])
     {
-        $locale = [];
-        if (isset($context['locale'])) {
-            $locale = ['lang' => $context['locale']];
-        } elseif (isset($context['app']) && $context['app'] instanceof AppVariable) {
-            /** @var AppVariable $app */
-            $app = $context['app'];
-            $locale = ['lang' => $app->getRequest()->getLocale()];
-        }
-
         if (null === $page) {
             $page = $this->domainConfiguration->getRootNode();
         }
@@ -59,7 +46,7 @@ class SiteTreeTwigExtension extends \Twig_Extension
         return $this->siteTree->getChildren($page, $options + [
                 'depth' => 0,
                 'refName' => $this->getRefNames($ofType),
-            ] + $locale);
+            ]);
     }
 
     /**

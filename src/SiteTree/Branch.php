@@ -22,6 +22,11 @@ class Branch extends Category implements \IteratorAggregate, HasRefInterface
     private $internalName;
 
     /**
+     * @var string
+     */
+    private $lang;
+
+    /**
      * @var Branch[]
      */
     private $children = [];
@@ -30,13 +35,15 @@ class Branch extends Category implements \IteratorAggregate, HasRefInterface
      * @param string $title
      * @param int $nodeId
      * @param string $slug
+     * @param string $lang
      * @param int $refId
      * @param string $refName
      * @param string $internalName
      */
-    public function __construct($title, $nodeId, $slug, $refId, $refName, $internalName)
+    public function __construct($title, $nodeId, $slug, $lang, $refId, $refName, $internalName)
     {
         parent::__construct($title, $nodeId, $slug);
+        $this->lang = $lang;
         $this->refId = $refId;
         $this->refName = $refName;
         $this->internalName = $internalName;
@@ -79,6 +86,11 @@ class Branch extends Category implements \IteratorAggregate, HasRefInterface
     public function getInternalName()
     {
         return $this->internalName;
+    }
+
+    public function getLang()
+    {
+        return $this->lang;
     }
 
     /**
