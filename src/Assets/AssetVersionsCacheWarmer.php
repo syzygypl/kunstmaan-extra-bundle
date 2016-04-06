@@ -56,9 +56,9 @@ class AssetVersionsCacheWarmer extends CacheWarmer
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
-            $cannonicalName = '/' . $file->getRelativePathname();
+            $cannonicalName = $file->getRelativePathname();
 
-            $result[$cannonicalName] = $this->versioningScheme->getVersion($cannonicalName);
+            $result[$cannonicalName] = $this->versioningScheme->getVersion('/' . $cannonicalName);
         }
 
         $cacheDir = sprintf($cacheDir . '/' . $this->cacheName);

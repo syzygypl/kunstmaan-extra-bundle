@@ -35,7 +35,7 @@ services:
     kunstmaan_extra.assets.cached:
         public: false
         class: '%kunstmaan_extra.assets.cached.class%'
-        arguments: [ '%kunstmaan_extra.assets.cache_file_path%' ]
+        arguments: [ '%kunstmaan_extra.assets.cache_file_path%', '%kunstmaan_extra.assets.web_prefix%' ]
 
     ars_thanea_kunstmaan_extra.twig.asset_url_twig_extension:
         public: false
