@@ -96,10 +96,10 @@ class NodeEntityType extends DoctrineType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'advanced_select' => true,
-            'root_node'       => function () {
+            'root_node'       => function (Options $options) {
                 return $this->domainConfiguration->getRootNode();
             },
-            'lang'            => function () {
+            'lang'            => function (Options $options) {
                 return $this->currentLocale->getCurrentLocale();
             },
             'class'           => function (Options $options) {
@@ -125,7 +125,7 @@ class NodeEntityType extends DoctrineType
             'required'        => false,
         ]);
 
-        $resolver->setAllowedTypes('root_node', Node::class);
+        $resolver->setAllowedTypes('root_node', ['null', Node::class]);
         $resolver->setRequired('page_name');
 
     }
