@@ -23,5 +23,4 @@ services:
         public: false
         class: '%ars_thanea_kunstmaan_extra.form.transformer.node_translation_to_url_transformer.class%'
         arguments:
-         - '@ars_thanea_kunstmaan_extra.node_translation_repository'
-         - '@kunstmaan_extra.site_tree.current_locale'
+         - '@kunstmaan_node.slugrouter'

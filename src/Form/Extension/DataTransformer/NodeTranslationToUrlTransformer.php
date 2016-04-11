@@ -7,22 +7,19 @@ use Kunstmaan\NodeBundle\Entity\NodeTranslation;
 use Kunstmaan\NodeBundle\Repository\NodeTranslationRepository;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\RouterInterface;
 
 class NodeTranslationToUrlTransformer implements DataTransformerInterface
 {
     /**
-     * @var NodeTranslationRepository
+     * @var RouterInterface
      */
-    private $repository;
-    /**
-     * @var CurrentLocaleInterface
-     */
-    private $currentLocale;
+    private $router;
 
-    public function __construct(NodeTranslationRepository $repository, CurrentLocaleInterface $currentLocale)
+    public function __construct(RouterInterface $router)
     {
-        $this->repository = $repository;
-        $this->currentLocale = $currentLocale;
+        $this->router = $router;
     }
 
 
@@ -41,7 +38,10 @@ class NodeTranslationToUrlTransformer implements DataTransformerInterface
             throw new TransformationFailedException("Value must be instance of NodeTranslation");
         }
 
-        return '/' . $value->getUrl();
+        return $this->router->generate('_slug', [
+            '_locale' => $value->getLang(),
+            'url' => $value->getUrl(),
+        ]);
     }
 
     /**
@@ -55,14 +55,17 @@ class NodeTranslationToUrlTransformer implements DataTransformerInterface
             return null;
         }
 
-        $locale = $this->currentLocale->getCurrentLocale();
+        try {
+            $route = $this->router->match($value);
 
-        $nodeTranslation = $this->repository->getNodeTranslationForUrl(ltrim($value, '/'), $locale);
+            if (false === isset($route['_nodeTranslation']) || false === $route['_nodeTranslation'] instanceof NodeTranslation) {
+                throw new TransformationFailedException('Matched route has no nodeTranslation');
+            }
 
-        if (null === $nodeTranslation) {
-            throw new TransformationFailedException('Cannot find nodeTranslation for given URL');
+            return $route['_nodeTranslation'];
+
+        } catch (RouteNotFoundException $e) {
+            throw new TransformationFailedException('Cannot match URL to a nodeTranslation', 0, $e);
         }
-
-        return $nodeTranslation;
     }
 }
