@@ -81,6 +81,19 @@ class ContentCategoryService implements ContentCategoryInterface
 
     /**
      * @param HasNodeInterface $page
+     * @param bool $hidden
+     *
+     * @return Category|null
+     */
+    public function getCurrentCategory(HasNodeInterface $page, $hidden = true)
+    {
+        $breadcrumbs = $this->getBreadcrumbs($page, $hidden);
+
+        return end($breadcrumbs) ?: null;
+    }
+
+    /**
+     * @param HasNodeInterface $page
      * @param bool             $full
      *
      * @invalidate cache on structure change

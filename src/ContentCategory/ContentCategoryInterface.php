@@ -32,6 +32,15 @@ interface ContentCategoryInterface
 
     /**
      * @param HasNodeInterface $page
+     *
+     * @param bool $hidden
+     *
+     * @return Category|null
+     */
+    public function getCurrentCategory(HasNodeInterface $page, $hidden = true);
+
+    /**
+     * @param HasNodeInterface $page
      * @param bool             $full
      *
      * @return Category[]

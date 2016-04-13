@@ -29,6 +29,7 @@ class ContentCategoryTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
+            new \Twig_SimpleFunction('current_category', [$this, 'getCurrentCategory']),
             new \Twig_SimpleFunction('root_category', [$this, 'getRootCategory']),
             new \Twig_SimpleFunction('main_category', [$this, 'getMainCategory']),
             new \Twig_SimpleFunction('parent_category', [$this, 'getParentCategory']),
@@ -49,6 +50,11 @@ class ContentCategoryTwigExtension extends \Twig_Extension
     public function getParentCategory(HasNodeInterface $page)
     {
         return $this->categoryService->getParentCategory($page);
+    }
+
+    public function getCurrentCategory(HasNodeInterface $page)
+    {
+        return $this->categoryService->getCurrentCategory($page);
     }
 
     public function getBreadcrumbs(HasNodeInterface $page)
