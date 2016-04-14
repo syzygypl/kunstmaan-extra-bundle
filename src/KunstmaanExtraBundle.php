@@ -2,6 +2,7 @@
 
 namespace ArsThanea\KunstmaanExtraBundle;
 
+use ArsThanea\KunstmaanExtraBundle\DependencyInjection\CompilerPass\ElasticSearchCompilerPass;
 use Nassau\RegistryCompiler\RegistryCompilerPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -11,6 +12,8 @@ class KunstmaanExtraBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
+        $container->addCompilerPass(new ElasticSearchCompilerPass());
+
         foreach ($container->getCompilerPassConfig()->getPasses() as $pass) {
             if ($pass instanceof RegistryCompilerPass) {
                 return;
