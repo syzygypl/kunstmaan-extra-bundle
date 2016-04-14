@@ -111,8 +111,14 @@ class ChainSearchProvider implements SearchProviderInterface
      */
     public function addDocument($indexName, $indexType, $document, $uid)
     {
+        if ("" === $indexName && $document instanceof DocumentReference) {
+            $indexName = $document->getIndexName();
+        } else {
+            $indexName = $this->indexNamePrefix . $indexName;
+        }
+
         $this->mapProviders(function (SearchProviderInterface $provider) use ($document, $uid, $indexName, $indexType) {
-            $provider->addDocument($document, $uid, $this->indexNamePrefix . $indexName, $indexType);
+            $provider->addDocument($document, $uid, $indexName, $indexType);
         });
     }
 
@@ -127,7 +133,14 @@ class ChainSearchProvider implements SearchProviderInterface
      */
     public function addDocuments($documents, $indexName = '', $indexType = '')
     {
+        if ("" === $indexName && isset($documents[0])) {
+            $indexName = $documents[0]->getIndexName();
+        } else {
+            $indexName = $this->indexNamePrefix . $indexName;
+        }
+
         $this->mapProviders(function (SearchProviderInterface $provider) use ($documents, $indexName, $indexType) {
+
             $documents = array_map(function (DocumentReference $document) use ($provider) {
                 return $provider->createDocument(
                     $document->getDocument(),
@@ -137,7 +150,7 @@ class ChainSearchProvider implements SearchProviderInterface
                 );
             }, $documents);
 
-            $provider->addDocuments($documents, $this->indexNamePrefix . $indexName, $indexType);
+            $provider->addDocuments($documents, $indexName, $indexType);
         });
     }
 

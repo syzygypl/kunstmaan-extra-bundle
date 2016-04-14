@@ -2,6 +2,7 @@
 
 namespace ArsThanea\KunstmaanExtraBundle\Search;
 
+use ArsThanea\KunstmaanExtraBundle\ContentType\PageContentTypeInterface;
 use Elastica\Index;
 use Kunstmaan\NodeBundle\Entity\NodeTranslation;
 use Kunstmaan\NodeBundle\Entity\PageInterface;
@@ -22,6 +23,11 @@ class KunstmaanExtraNodePagesConfiguration extends NodePagesConfiguration
     private $eventDispatcher;
 
     /**
+     * @var PageContentTypeInterface
+     */
+    private $contentType;
+
+    /**
      * @param ContainerInterface      $container
      * @param SearchProviderInterface $searchProvider
      * @param string                  $name
@@ -31,7 +37,18 @@ class KunstmaanExtraNodePagesConfiguration extends NodePagesConfiguration
     {
         parent::__construct($container, $searchProvider, $name, $type);
         $this->eventDispatcher = $this->container->get('event_dispatcher');
+        $this->contentType = $this->container->get('kunstmaan_extra.content_type');
     }
+
+    protected function addSearchType($page, &$doc)
+    {
+        parent::addSearchType($page, $doc);
+
+        if (false !== strpos($doc['type'], "\\")) {
+            $doc['type'] = $this->contentType->getFriendlyName($doc['type']);
+        }
+    }
+
 
     /**
      * @param NodeTranslation $nodeTranslation
