@@ -4,6 +4,8 @@
 namespace ArsThanea\KunstmaanExtraBundle\DependencyInjection;
 
 
+use ArsThanea\KunstmaanExtraBundle\Search\ChainSearchProvider;
+use ArsThanea\KunstmaanExtraBundle\Search\KunstmaanExtraNodePagesConfiguration;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,6 +33,10 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
         $loader->load('twig_extensions.yml');
         $loader->load('form_types.yml');
         $loader->load('ref_id_providers.yml');
+
+
+        $container->setParameter('kunstmaan_node_search.search_configuration.node.class', KunstmaanExtraNodePagesConfiguration::class);
+        $container->setParameter('kunstmaan_search.search.class', ChainSearchProvider::class);
 
         if ($configs['assets']['web_prefix']) {
             $container->setParameter('kunstmaan_extra.assets.cdn_url', $configs['assets']['cdn_url']);
