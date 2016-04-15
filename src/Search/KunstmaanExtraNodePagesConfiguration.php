@@ -9,6 +9,7 @@ use Kunstmaan\NodeBundle\Entity\PageInterface;
 use Kunstmaan\NodeBundle\Helper\RenderContext;
 use Kunstmaan\NodeSearchBundle\Configuration\NodePagesConfiguration;
 use Kunstmaan\NodeSearchBundle\Helper\SearchViewTemplateInterface;
+use Kunstmaan\SearchBundle\Search\AnalysisFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Kunstmaan\SearchBundle\Provider\SearchProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -27,6 +28,9 @@ class KunstmaanExtraNodePagesConfiguration extends NodePagesConfiguration
      */
     private $contentType;
 
+    private $shards = 4;
+    private $replicas = 1;
+
     /**
      * @param ContainerInterface      $container
      * @param SearchProviderInterface $searchProvider
@@ -38,7 +42,21 @@ class KunstmaanExtraNodePagesConfiguration extends NodePagesConfiguration
         parent::__construct($container, $searchProvider, $name, $type);
         $this->eventDispatcher = $this->container->get('event_dispatcher');
         $this->contentType = $this->container->get('kunstmaan_extra.content_type');
+        $this->shards = $this->container->getParameter('kunstmaan_extra.search.shards');
+        $this->replicas = $this->container->getParameter('kunstmaan_extra.search.replicas');
     }
+
+    public function setAnalysis(Index $index, AnalysisFactoryInterface $analysis)
+    {
+        $index->create(
+            array(
+                'number_of_shards'   => $this->shards,
+                'number_of_replicas' => $this->replicas,
+                'analysis'           => $analysis->build()
+            )
+        );
+    }
+
 
     protected function addSearchType($page, &$doc)
     {

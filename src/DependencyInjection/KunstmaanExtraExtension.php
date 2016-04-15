@@ -38,6 +38,13 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
         $container->setParameter('kunstmaan_node_search.search_configuration.node.class', KunstmaanExtraNodePagesConfiguration::class);
         $container->setParameter('kunstmaan_search.search.class', ChainSearchProvider::class);
 
+        if ($configs['search']['url']) {
+            $container->setParameter(CompilerPass\ElasticSearchCompilerPass::PARAM_SEARCH_URL, $configs['search']['url']);
+        }
+
+        $container->setParameter('kunstmaan_extra.search.replicas', $configs['search']['replicas']);
+        $container->setParameter('kunstmaan_extra.search.shards', $configs['search']['shards']);
+
         if ($configs['assets']['web_prefix']) {
             $container->setParameter('kunstmaan_extra.assets.cdn_url', $configs['assets']['cdn_url']);
             $container->setParameter('kunstmaan_extra.assets.web_prefix', $configs['assets']['web_prefix']);

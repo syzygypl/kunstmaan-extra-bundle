@@ -20,6 +20,12 @@ class Configuration implements ConfigurationInterface
         $assets->children()->scalarNode('cdn_url')->defaultValue("");
         $assets->children()->scalarNode('web_prefix')->defaultNull();
 
+        $search = $rootNode->children()->arrayNode('search');
+        $search->addDefaultsIfNotSet();
+        $search->children()->scalarNode('url')->defaultNull();
+        $search->children()->scalarNode('replicas')->defaultValue(1);
+        $search->children()->scalarNode('shards')->defaultValue(4);
+
 
         return $treeBuilder;
 
