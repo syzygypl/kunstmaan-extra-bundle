@@ -6,6 +6,7 @@ parameters:
     kunstmaan_extra.content_type.class: 'ArsThanea\KunstmaanExtraBundle\ContentType\ContentTypeService'
     kunstmaan_extra.site_tree.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\SiteTreeService'
     kunstmaan_extra.page_url.class: 'ArsThanea\KunstmaanExtraBundle\Url\PageUrlService'
+    kunstmaan_extra.intl.date_formatter.class: 'ArsThanea\KunstmaanExtraBundle\Intl\DateFormatter'
 
 services:
     kunstmaan_extra.public_node_versions:
@@ -65,3 +66,8 @@ services:
         class: 'Kunstmaan\NodeBundle\Repository\NodeTranslationRepository'
         factory: 'doctrine.orm.entity_manager:getRepository'
         arguments: [ 'KunstmaanNodeBundle:NodeTranslation' ]
+
+    kunstmaan_extra.intl.date_formatter:
+        class: '%kunstmaan_extra.intl.date_formatter.class%'
+        public: false
+        arguments: [ '@kunstmaan_extra.site_tree.current_locale', '%kunstmaan_extra.date_formats%' ]

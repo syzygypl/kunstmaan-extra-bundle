@@ -8,6 +8,7 @@ parameters:
     ars_thanea_kunstmaan_extra.twig.bem_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\BemTwigExtension'
     ars_thanea_kunstmaan_extra.twig.form_attributes_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\FormAttributesTwigExtension'
     ars_thanea_kunstmaan_extra.twig.typography_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\TypographyTwigExtension'
+    ars_thanea_kunstmaan_extra.twig.pretty_date_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\PrettyDateTwigExtension'
 
 services:
 
@@ -71,5 +72,13 @@ services:
     ars_thanea_kunstmaan_extra.twig.typography_twig_extension:
         class: '%ars_thanea_kunstmaan_extra.twig.typography_twig_extension.class%'
         public: false
+        tags:
+            - { name: twig.extension }
+
+
+    ars_thanea_kunstmaan_extra.twig.pretty_date_twig_extension:
+        class: '%ars_thanea_kunstmaan_extra.twig.pretty_date_twig_extension.class%'
+        public: false
+        arguments: [ '@kunstmaan_extra.intl.date_formatter' ]
         tags:
             - { name: twig.extension }

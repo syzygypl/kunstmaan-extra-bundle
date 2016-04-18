@@ -1,11 +1,12 @@
 {
     "name": "arsthanea/kunstmaan-extra-bundle",
     "require": {
+        "ext-intl": "*",
         "kunstmaan/bundles-cms": "~3.5",
-        "friendsofsymfony/user-bundle": "2.0.*@dev",
-        "symfony-cmf/routing-bundle": "~1.4.0-RC1",
-        "symfony-cmf/routing": "~1.4.0-RC2",
         "nassau/registry-compiler": "^1.0"
+    },
+    "require-dev": {
+        "friendsofsymfony/user-bundle": "2.0.*@dev"
     },
     "license": "MIT",
     "authors": [

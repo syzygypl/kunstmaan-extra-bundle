@@ -45,6 +45,8 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
         $container->setParameter('kunstmaan_extra.search.replicas', $configs['search']['replicas']);
         $container->setParameter('kunstmaan_extra.search.shards', $configs['search']['shards']);
 
+        $container->setParameter('kunstmaan_extra.date_formats', isset($configs['date_formats']) ? $configs['date_formats'] : []);
+
         if ($configs['assets']['web_prefix']) {
             $container->setParameter('kunstmaan_extra.assets.cdn_url', $configs['assets']['cdn_url']);
             $container->setParameter('kunstmaan_extra.assets.web_prefix', $configs['assets']['web_prefix']);

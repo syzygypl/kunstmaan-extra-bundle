@@ -4,6 +4,7 @@
 namespace ArsThanea\KunstmaanExtraBundle\DependencyInjection;
 
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -25,6 +26,14 @@ class Configuration implements ConfigurationInterface
         $search->children()->scalarNode('url')->defaultNull();
         $search->children()->scalarNode('replicas')->defaultValue(1);
         $search->children()->scalarNode('shards')->defaultValue(4);
+
+        /** @var ArrayNodeDefinition $dateFormats */
+        $dateFormats = $rootNode->children()->arrayNode('date_formats');
+        $dateFormats->defaultValue([]);
+
+        $dateFormats = $dateFormats->prototype('array');
+        $dateFormats->prototype('scalar');
+
 
 
         return $treeBuilder;

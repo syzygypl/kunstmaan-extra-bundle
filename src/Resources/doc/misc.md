@@ -23,3 +23,28 @@ Or maybe you’d like to accept various pages sharing a common interface. In thi
  **/
  public function fooBarAction(HasFooBarInterface $page)
  ```
+ 
+## Date Formatter
+
+### Usage
+
+```twig
+{{ "today"|pretty_date("d MMMM, EEEE, H:mm") }}
+
+{# Custom format preset, different for each locale #} 
+{{ "today"|pretty_date("home_page") }}
+```
+
+### Configuration
+
+Configure custom formats for each locale:
+
+```yml
+# app/config/config.yml
+
+kunstmaan_extra:
+  date_formats: 
+    home_page:
+      en: "d MMMM, EEEE, H:mm"
+      fr: …
+```
