@@ -79,3 +79,14 @@ services:
         class: '%kunstmaan_extra.intl.date_formatter.class%'
         public: false
         arguments: [ '@kunstmaan_extra.site_tree.current_locale', '%kunstmaan_extra.date_formats%' ]
+
+
+    kunstamaan_extra.page_context:
+      class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageContext'
+      arguments: [ '@kunstamaan_extra.page_context.collection' ]
+      tags:
+        - name: nassau.registry
+          tag: page_context_provider
+          method: ~
+          use_collection: true
+          class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageContextProviderInterface'
