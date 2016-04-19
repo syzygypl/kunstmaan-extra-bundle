@@ -43,7 +43,7 @@ class SiteTreeService
         if ($parent instanceof HasNodeInterface) {
             $node = $this->publicNodeVersions->getNodeFor($parent);
         } elseif ($parent instanceof Category) {
-            $node = $this->nodeRepository->find($parent->getId());
+            $node = $this->nodeRepository->find($parent->getNodeId());
         } elseif ($parent instanceof Node) {
             $node = $parent;
         } else {

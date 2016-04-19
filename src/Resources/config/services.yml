@@ -3,6 +3,7 @@ parameters:
     kunstmaan_extra.content_category.class: 'ArsThanea\KunstmaanExtraBundle\ContentCategory\ContentCategoryService'
     kunstmaan_extra.site_tree.current_locale.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\CurrentLocale'
     kunstmaan_extra.site_tree.bread_crumbs.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\BreadCrumbsService'
+    kunstmaan_extra.navigation.navigation.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\Navigation\Navigation'
     kunstmaan_extra.content_type.class: 'ArsThanea\KunstmaanExtraBundle\ContentType\ContentTypeService'
     kunstmaan_extra.site_tree.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\SiteTreeService'
     kunstmaan_extra.page_url.class: 'ArsThanea\KunstmaanExtraBundle\Url\PageUrlService'
@@ -43,6 +44,13 @@ services:
 
     kunstmaan_extra.site_tree.branch_utilities_service:
         class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\BranchUtilitiesService'
+
+    kunstmaan_extra.navigation.navigation:
+        class: '%kunstmaan_extra.navigation.navigation.class%'
+        arguments:
+          - '@kunstmaan_extra.site_tree'
+          - '@kunstmaan_extra.content_category'
+          - '@kunstmaan_extra.site_tree.branch_utilities_service'
 
     kunstmaan_extra.page_url:
         class: '%kunstmaan_extra.page_url.class%'
