@@ -8,6 +8,7 @@ parameters:
     kunstmaan_extra.site_tree.class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\SiteTreeService'
     kunstmaan_extra.page_url.class: 'ArsThanea\KunstmaanExtraBundle\Url\PageUrlService'
     kunstmaan_extra.intl.date_formatter.class: 'ArsThanea\KunstmaanExtraBundle\Intl\DateFormatter'
+    kunstmaan_extra.page_context.page_controller_context.class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageControllerContext'
 
 services:
     kunstmaan_extra.public_node_versions:
@@ -89,4 +90,15 @@ services:
           tag: page_context_provider
           method: ~
           use_collection: true
+          order: priority
           class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageContextProviderInterface'
+
+
+    kunstmaan_extra.page_context.page_controller_context:
+        class: '%kunstmaan_extra.page_context.page_controller_context.class%'
+        public: false
+        arguments: [ '@service_container' ]
+        tags:
+          - name: page_context_provider
+            priority: 0
+

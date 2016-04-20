@@ -1,6 +1,7 @@
 # Kunstmaan Extra Bundle
 
  * [Concepts](src/Resources/doc/concepts.md)
+ * [Page Conventions](src/Resources/doc/page-conventions.md)
  * [Content Category](src/Resources/doc/content-category.md)
  * [Content Types](src/Resources/doc/content-type.md)
  * [Site Tree](src/Resources/doc/site-tree.md)

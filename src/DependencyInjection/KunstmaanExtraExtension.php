@@ -4,13 +4,16 @@
 namespace ArsThanea\KunstmaanExtraBundle\DependencyInjection;
 
 
+use ArsThanea\KunstmaanExtraBundle\Page\PageController\TypehintingControllerCacheWarmer;
 use ArsThanea\KunstmaanExtraBundle\Search\ChainSearchProvider;
 use ArsThanea\KunstmaanExtraBundle\Search\KunstmaanExtraNodePagesConfiguration;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class KunstmaanExtraExtension extends Extension implements PrependExtensionInterface
@@ -51,6 +54,14 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
             $container->setParameter('kunstmaan_extra.assets.cdn_url', $configs['assets']['cdn_url']);
             $container->setParameter('kunstmaan_extra.assets.web_prefix', $configs['assets']['web_prefix']);
             $loader->load('assets.yml');
+        }
+
+        if ($configs['generate_controller']) {
+            $container->setDefinition('kunstmaan_extra.typehinting_controller_cache_warmer', (new Definition)
+                ->setClass(TypehintingControllerCacheWarmer::class)
+                ->setArguments([new Reference('kernel'), $configs['generate_controller']])
+                ->addTag('kernel.cache_warmer')
+            );
         }
     }
 

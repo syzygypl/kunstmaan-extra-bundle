@@ -2,12 +2,13 @@
 
 namespace ArsThanea\KunstmaanExtraBundle\Page;
 
+use Kunstmaan\NodeBundle\Entity\AbstractPage;
 use Kunstmaan\NodeBundle\Helper\RenderContext;
 use Kunstmaan\UtilitiesBundle\Helper\ClassLookup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractPage extends \Kunstmaan\NodeBundle\Entity\AbstractPage
+abstract class KunstmaanExtraPage extends AbstractPage
 {
     const PAGE = true;
 
@@ -40,7 +41,7 @@ abstract class AbstractPage extends \Kunstmaan\NodeBundle\Entity\AbstractPage
     {
         $page = $this->getPageName();
 
-        return sprintf('%sBundle:Pages:%s/%s.html.twig', $this->getBundleName(), substr($page, 0, - strlen('Page')), $page);
+        return sprintf('@%s/Pages/%s/%s.html.twig', $this->getBundleName(), substr($page, 0, - strlen('Page')), $page);
     }
 
     public function service(ContainerInterface $container, Request $request, RenderContext $context)

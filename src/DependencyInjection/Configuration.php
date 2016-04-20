@@ -16,6 +16,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('kunstmaan_extra');
 
+        $rootNode->children()->scalarNode('generate_controller')->defaultNull();
+
         $assets = $rootNode->children()->arrayNode('assets');
         $assets->addDefaultsIfNotSet();
         $assets->children()->scalarNode('cdn_url')->defaultValue("");

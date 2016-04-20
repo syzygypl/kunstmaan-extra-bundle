@@ -27,6 +27,10 @@ class PageContext
             $keys = $provider->getContextName();
             $values = $provider->getContextValue($page, $context);
 
+            if (null === $keys && is_array($values)) {
+                $keys = array_keys($values);
+            }
+
             if (false === is_array($keys)) {
                 $keys = [$keys];
                 $values = [$values];

@@ -2,9 +2,10 @@
 
 namespace ArsThanea\KunstmaanExtraBundle\Page;
 
+use Kunstmaan\PagePartBundle\Entity\AbstractPagePart;
 use Kunstmaan\UtilitiesBundle\Helper\ClassLookup;
 
-abstract class AbstractPagePart extends \Kunstmaan\PagePartBundle\Entity\AbstractPagePart
+abstract class KunstmaanExtraPagePart extends AbstractPagePart
 {
 
     const PAGEPART = true;
@@ -25,7 +26,7 @@ abstract class AbstractPagePart extends \Kunstmaan\PagePartBundle\Entity\Abstrac
     {
         $name = $this->getPagePartName();
 
-        return sprintf('%sBundle:PageParts:%s/%s.default.html.twig', $this->getBundleName(), substr($name, 0, - strlen('PagePart')), $name);
+        return sprintf('@%s/PageParts/%s/%s.default.html.twig', $this->getBundleName(), substr($name, 0, - strlen('PagePart')), $name);
     }
 
     public function getAdminView()
