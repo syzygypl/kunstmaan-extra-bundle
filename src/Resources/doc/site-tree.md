@@ -17,6 +17,10 @@ Twig helper has a litte different interface. Since it’s harder to use class na
 {% set articles = get_page_children(page, 'article', {"limit": 3}) }
 ```
 
+## CurrentLocale
+
+Use the `kunstmaan_extra.site_tree.current_locale` service for conviniently getting the locale of the current request
+with a fallback for the site’s default locale.
 
 ## Navigation
 

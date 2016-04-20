@@ -48,3 +48,46 @@ kunstmaan_extra:
       en: "d MMMM, EEEE, H:mm"
       fr: …
 ```
+
+## Form attributes
+
+Easily add HTML attributes to a form view in templates. Decouples `FormTypes` from their templates. Instead of setting
+`attr` in the `FormType` options you can do it / extend it in the template:
+
+```twig
+{% set form = form|form_attributes({
+    "child.birth_date": "-additional-modifier",
+    "profile.email": {
+        "title": "Hello!",
+        "class": "zzz"
+    }
+}) %}
+```
+
+## Convert elements to use BEM notation
+
+When using WYSIWYG all you get is simple tags with no classes, but when using BEM you’re required to target only 
+classes instead of HTML elements in your CSS. This filter automatically adds given classes to given elements, and
+strips all other tags by the way:
+
+```twig
+ {{ '<div><p>Hello <b>World!</b></p></div>'|bem({
+      'p': "landingPageAnswer__text",
+      'b': null,
+    })
+ }}
+ 
+ {# Output:
+     <p class="landingPageAnswer__text">Hello <b>World!</b></p>
+ #}
+```
+
+## Automatically fix orphans
+
+Replaces phases like `a cat` with `a&nbsp;cat` to keep them in the same line.
+
+```twig
+{{
+   page.content|orphans
+}}
+```

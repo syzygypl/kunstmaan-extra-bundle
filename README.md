@@ -7,3 +7,4 @@
  * [Site Tree](src/Resources/doc/site-tree.md)
  * [Form types](src/Resources/doc/form-types.md)
  * [Misc](src/Resources/doc/misc.md)
+ * [Search](src/Resources/doc/search.md)
