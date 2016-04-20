@@ -1,5 +1,6 @@
 parameters:
     ars_thanea_kunstmaan_extra.form.transformer.node_translation_to_url_transformer.class: 'ArsThanea\KunstmaanExtraBundle\Form\Extension\DataTransformer\NodeTranslationToUrlTransformer'
+    ars_thanea_kunstmaan_extra.form_extension.advanced_select_form_extension.class: 'ArsThanea\KunstmaanExtraBundle\Form\Extension\AdvancedSelectFormExtension'
 
 services:
 
@@ -24,3 +25,8 @@ services:
         class: '%ars_thanea_kunstmaan_extra.form.transformer.node_translation_to_url_transformer.class%'
         arguments:
          - '@kunstmaan_node.slugrouter'
+
+    ars_thanea_kunstmaan_extra.form_extension.advanced_select_form_extension:
+        class: '%ars_thanea_kunstmaan_extra.form_extension.advanced_select_form_extension.class%'
+        tags:
+            - { name: form.type_extension, extended_type: 'Symfony\Component\Form\Extension\Core\Type\ChoiceType' }

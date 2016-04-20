@@ -20,6 +20,7 @@ The service is registered as `kunstmaan_extra.content_type` in the container:
 
  * `getContentTypeClass` converts friendly name to a class name
  * `getFriendlyName` does the reverse
+ * `getAllContentTypeClasses` returns a friendly name to class name mapping for all the pages
 
 ## Twig functions
 

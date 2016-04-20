@@ -83,7 +83,7 @@ class ContentTypeTwigExtension extends \Twig_Extension
 
     public function getTests()
     {
-        $callbackFactory = function ($className ) {
+        $callbackFactory = function ($className) {
             return function ($node) use ($className) {
                 return ($node instanceof $className)
                     || ($node instanceof Node && $node->getRefEntityName() === $className)

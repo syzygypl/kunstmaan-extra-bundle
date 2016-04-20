@@ -16,3 +16,13 @@ Twig helper has a litte different interface. Since it’s harder to use class na
 ```twig
 {% set articles = get_page_children(page, 'article', {"limit": 3}) }
 ```
+
+
+## Navigation
+
+Navigation component provides a simple prev/next page via two twig functions:
+
+ * `get_navigation_next(page)`
+ * `get_navigation_prev(page)`
+
+Those functions return a Branch instance and return only siblings of the same type as a given page.

@@ -54,25 +54,6 @@ class ContentTypeService implements PageContentTypeInterface
         return $name;
     }
 
-    private function getTypesDeep($refName, $exclude = [])
-    {
-        foreach ($this->pagesConfiguration->getPossibleChildTypes($refName) as $type) {
-            $type = $type['class'];
-            if (in_array($type, $exclude)) {
-                continue;
-            }
-
-            yield $type;
-
-            $exclude[] = $type;
-
-            foreach ($this->getTypesDeep($type, $exclude) as $subType) {
-                $exclude[] = $subType;
-                yield $subType;
-            }
-        }
-    }
-
     /**
      * @return array
      */
@@ -90,5 +71,24 @@ class ContentTypeService implements PageContentTypeInterface
         }
 
         return $this->allTypes;
+    }
+
+    private function getTypesDeep($refName, $exclude = [])
+    {
+        foreach ($this->pagesConfiguration->getPossibleChildTypes($refName) as $type) {
+            $type = $type['class'];
+            if (in_array($type, $exclude)) {
+                continue;
+            }
+
+            yield $type;
+
+            $exclude[] = $type;
+
+            foreach ($this->getTypesDeep($type, $exclude) as $subType) {
+                $exclude[] = $subType;
+                yield $subType;
+            }
+        }
     }
 }

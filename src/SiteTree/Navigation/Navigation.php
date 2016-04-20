@@ -44,26 +44,28 @@ class Navigation
     }
 
 
-    public function getNextPage(HasNodeInterface $page)
+    public function getNextPage(HasNodeInterface $page, $loop = false)
     {
-        list (, $next) = $this->getPrevNext($page);
+        list (, $next) = $this->getPrevNext($page, $loop);
 
         return $next;
     }
 
-    public function getPreviousPage(HasNodeInterface $page)
+    public function getPreviousPage(HasNodeInterface $page, $loop = false)
     {
-        list ($prev) = $this->getPrevNext($page);
+        list ($prev) = $this->getPrevNext($page, $loop);
 
         return $prev;
     }
 
-    private function getPrevNext(HasNodeInterface $page)
+    private function getPrevNext(HasNodeInterface $page, $loop)
     {
         $class = ClassLookup::getClass($page);
         $id = $page->getId();
 
         if (false === isset($this->nav[$class][$id])) {
+            $this->nav[$class][$id] = ['prev' => null, 'next' => null];
+
             $parent = $this->contentCategory->getParentCategory($page);
             $siblings = $this->siteTree->getChildren($parent, [
                 'refName' => $class,
@@ -79,18 +81,20 @@ class Navigation
                 }
             }
 
-            if (null === $current) {
-                $this->nav[$class][$id] = [null, null];
-            } else {
+            if (null !== $current) {
                 $this->nav[$class][$id] = [
-                    $this->utility->getPreviousSibling($siblings, $current),
-                    $this->utility->getNextSibling($siblings, $current),
+                    'prev' => $this->utility->getPreviousSibling($siblings, $current),
+                    'next' => $this->utility->getNextSibling($siblings, $current),
                 ];
             }
 
+            if ($loop) {
+                $this->nav[$class][$id]['prev'] = $this->nav[$class][$id]['prev'] ?: $this->utility->getLastChild($siblings);
+                $this->nav[$class][$id]['next'] = $this->nav[$class][$id]['next'] ?: $this->utility->getFirstChild($siblings);
+            }
         }
 
-        return $this->nav[$class][$id];
+        return array_values($this->nav[$class][$id]);
     }
 
 

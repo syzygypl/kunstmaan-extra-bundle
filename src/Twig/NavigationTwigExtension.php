@@ -30,21 +30,21 @@ class NavigationTwigExtension extends \Twig_Extension
         ];
     }
 
-    public function getNextPage(HasNodeInterface $page)
+    public function getNextPage(HasNodeInterface $page, $loop = false)
     {
-        return $this->navigation->getNextPage($page);
+        return $this->navigation->getNextPage($page, $loop);
     }
 
-    public function getPrevPage(HasNodeInterface $page)
+    public function getPrevPage(HasNodeInterface $page, $loop = false)
     {
-        return $this->navigation->getPreviousPage($page);
+        return $this->navigation->getPreviousPage($page, $loop);
     }
 
-    public function getNavigationSiblings(HasNodeInterface $page)
+    public function getNavigationSiblings(HasNodeInterface $page, $loop = false)
     {
         return [
-            'prev' => $this->getPrevPage($page),
-            'next' => $this->getNextPage($page),
+            'prev' => $this->getPrevPage($page, $loop),
+            'next' => $this->getNextPage($page, $loop),
         ];
     }
 

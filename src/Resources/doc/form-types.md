@@ -21,3 +21,9 @@ Instead of providing a class name like the in `entity` type, use `page_name` wit
 ## `ArsThanea\KunstmaanExtraBundle\Form\PageUrlType`
 
 Uses a link chooser in the CMS panel, but saves a `NodeTranslation` on the entity.
+
+## Advanced select
+
+`ChoiceType` elements now have `advanced_select` option to change them into a `select2` widget (a dynamic select with
+autocompletion, etc). This works by adding `advanced-select` class to the widget and the native Kunstmaan mechanisms
+take over.
