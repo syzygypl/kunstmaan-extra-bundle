@@ -47,19 +47,19 @@ class ContentCategoryTwigExtension extends \Twig_Extension
         return $this->categoryService->getMainCategory($page);
     }
 
-    public function getParentCategory(HasNodeInterface $page)
+    public function getParentCategory(HasNodeInterface $page, $includeHidden = false)
     {
-        return $this->categoryService->getParentCategory($page);
+        return $this->categoryService->getParentCategory($page, $includeHidden);
     }
 
-    public function getCurrentCategory(HasNodeInterface $page)
+    public function getCurrentCategory(HasNodeInterface $page, $includeHidden = true)
     {
-        return $this->categoryService->getCurrentCategory($page);
+        return $this->categoryService->getCurrentCategory($page, $includeHidden);
     }
 
-    public function getBreadcrumbs(HasNodeInterface $page)
+    public function getBreadcrumbs(HasNodeInterface $page, $includeHidden = false)
     {
-        return $this->categoryService->getBreadcrumbs($page);
+        return $this->categoryService->getBreadcrumbs($page, $includeHidden);
     }
 
 
