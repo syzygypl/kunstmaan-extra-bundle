@@ -5,6 +5,7 @@ namespace ArsThanea\KunstmaanExtraBundle\SiteTree\Navigation;
 use ArsThanea\KunstmaanExtraBundle\ContentCategory\ContentCategoryInterface;
 use ArsThanea\KunstmaanExtraBundle\SiteTree\BranchUtilitiesService;
 use ArsThanea\KunstmaanExtraBundle\SiteTree\SiteTreeService;
+use ArsThanea\KunstmaanExtraBundle\SiteTree\UnknownNodeBranch;
 use Kunstmaan\NodeBundle\Entity\HasNodeInterface;
 use Kunstmaan\UtilitiesBundle\Helper\ClassLookup;
 
@@ -70,7 +71,7 @@ class Navigation
             $siblings = $this->siteTree->getChildren($parent, [
                 'refName' => $class,
                 'depth' => 1,
-            ]);
+            ]) ?: new UnknownNodeBranch();
 
             $current = null;
 
