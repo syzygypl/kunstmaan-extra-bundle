@@ -62,7 +62,7 @@ services:
         class: 'ArsThanea\KunstmaanExtraBundle\Request\ParamConverter\PageParamConverter'
         arguments: [ '@doctrine', '@kunstmaan_extra.content_type' ]
         tags:
-            - { name: request.param_converter }
+            - { name: request.param_converter, converter: "kunstmaan_extra.page" }
 
     ars_thanea_kunstmaan_extra.node_repository:
         public: false
