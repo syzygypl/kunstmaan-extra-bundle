@@ -67,7 +67,7 @@ class Navigation
         if (false === isset($this->nav[$class][$id])) {
             $this->nav[$class][$id] = ['prev' => null, 'next' => null];
 
-            $parent = $this->contentCategory->getParentCategory($page);
+            $parent = $this->contentCategory->getParentCategory($page, true);
             $siblings = $this->siteTree->getChildren($parent, [
                 'refName' => $class,
                 'depth' => 1,
