@@ -64,7 +64,7 @@ class ContentTypeService implements PageContentTypeInterface
             $this->allTypes = array_unique(
                 array_reduce($homePages, function ($allTypes, $homePage) {
                     return array_merge($allTypes, iterator_to_array($this->getTypesDeep($homePage)));
-                }, [])
+                }, $homePages)
             );
 
             $this->allTypes = array_combine(array_map([$this, 'getFriendlyName'], $this->allTypes), $this->allTypes);
