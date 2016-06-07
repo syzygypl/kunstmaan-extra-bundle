@@ -69,6 +69,7 @@ class SiteTreeService
             'include_root'    => false,
             'include_hidden'  => false,
             'include_offline' => false,
+            'flatten'         => false,
             'limit'           => 0,
         ])
             ->setNormalizer('refName', function ($options, $value) {
@@ -79,6 +80,7 @@ class SiteTreeService
             ->setAllowedTypes('limit', 'integer')
             ->setAllowedTypes('include_root', 'bool')
             ->setAllowedTypes('include_hidden', 'bool')
+            ->setAllowedTypes('flatten', 'bool')
             ->resolve($options);
 
         $qb = $this->nodeRepository
@@ -137,11 +139,19 @@ class SiteTreeService
 
         $children = $qb->getQuery()->getResult();
 
+        $flatten = $options['flatten'];
+
         /** @noinspection PhpInternalEntityUsedInspection */
-        return array_reduce($children, function (TreeBuilder $treeBuilder, $item) use ($nodeId) {
+        return array_reduce($children, function (TreeBuilder $treeBuilder, $item) use ($nodeId, $flatten) {
             $branch = new Branch($item['title'], $item['id'], $item['url'], $item['lang'], $item['refId'], $item['refEntityName'], $item['internalName']);
 
-            return $treeBuilder->add($branch->getNodeId() === $nodeId ? null : $item['parentId'], $branch);
+            if ($branch->getNodeId() === $nodeId) {
+                $item['parentId'] = null;
+            } elseif ($flatten) {
+                $item['parentId'] = $nodeId;
+            }
+
+            return $treeBuilder->add($item['parentId'], $branch);
         }, new TreeBuilder)->getRoot();
 
     }
