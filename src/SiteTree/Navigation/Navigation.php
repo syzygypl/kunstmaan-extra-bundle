@@ -3,6 +3,7 @@
 namespace ArsThanea\KunstmaanExtraBundle\SiteTree\Navigation;
 
 use ArsThanea\KunstmaanExtraBundle\ContentCategory\ContentCategoryInterface;
+use ArsThanea\KunstmaanExtraBundle\SiteTree\Branch;
 use ArsThanea\KunstmaanExtraBundle\SiteTree\BranchUtilitiesService;
 use ArsThanea\KunstmaanExtraBundle\SiteTree\SiteTreeService;
 use ArsThanea\KunstmaanExtraBundle\SiteTree\UnknownNodeBranch;
@@ -65,37 +66,49 @@ class Navigation
         $id = $page->getId();
 
         if (false === isset($this->nav[$class][$id])) {
-            $this->nav[$class][$id] = ['prev' => null, 'next' => null];
-
             $parent = $this->contentCategory->getParentCategory($page, true);
             $siblings = $this->siteTree->getChildren($parent, [
                 'refName' => $class,
                 'depth' => 1,
             ]) ?: new UnknownNodeBranch();
 
-            $current = null;
-
-            foreach ($siblings->getChildren() as $item) {
-                if ((string)$item->getRefId() === (string)$page->getId() && $item->getRefName() === $class) {
-                    $current = $item;
-                    break;
-                }
-            }
-
-            if (null !== $current) {
-                $this->nav[$class][$id] = [
-                    'prev' => $this->utility->getPreviousSibling($siblings, $current),
-                    'next' => $this->utility->getNextSibling($siblings, $current),
-                ];
-            }
-
-            if ($loop) {
-                $this->nav[$class][$id]['prev'] = $this->nav[$class][$id]['prev'] ?: $this->utility->getLastChild($siblings);
-                $this->nav[$class][$id]['next'] = $this->nav[$class][$id]['next'] ?: $this->utility->getFirstChild($siblings);
-            }
+            $this->nav[$class][$id] = $this->calculatePrevNext($siblings, $page, $loop);
         }
 
         return array_values($this->nav[$class][$id]);
+    }
+
+    private function calculatePrevNext(Branch $siblings, HasNodeInterface $page, $loop)
+    {
+        $result = ['prev' => null, 'next' => null];
+
+        // zero or one results (current page) means there is nowhere to navigate to
+        if (1 >= sizeof($siblings)) {
+            return $result;
+        }
+
+        $current = null;
+
+        foreach ($siblings->getChildren() as $item) {
+            if ((string)$item->getRefId() === (string)$page->getId()) {
+                $current = $item;
+                break;
+            }
+        }
+
+        if (null !== $current) {
+            $result = [
+                'prev' => $this->utility->getPreviousSibling($siblings, $current),
+                'next' => $this->utility->getNextSibling($siblings, $current),
+            ];
+        }
+
+        if ($loop) {
+            $result['prev'] = $result['prev'] ?: $this->utility->getLastChild($siblings);
+            $result['next'] = $result['next'] ?: $this->utility->getFirstChild($siblings);
+        }
+
+        return $result;
     }
 
 
