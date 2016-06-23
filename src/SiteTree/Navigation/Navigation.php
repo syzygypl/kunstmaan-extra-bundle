@@ -83,7 +83,7 @@ class Navigation
         $result = ['prev' => null, 'next' => null];
 
         // zero or one results (current page) means there is nowhere to navigate to
-        if (1 >= sizeof($siblings)) {
+        if (1 >= sizeof($siblings->getChildren())) {
             return $result;
         }
 
