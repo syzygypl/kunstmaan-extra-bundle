@@ -42,9 +42,9 @@ class ContentCategoryTwigExtension extends \Twig_Extension
         return $this->categoryService->getRootCategory($page);
     }
 
-    public function getMainCategory(HasNodeInterface $page)
+    public function getMainCategory(HasNodeInterface $page, $hidden = false)
     {
-        return $this->categoryService->getMainCategory($page);
+        return $this->categoryService->getMainCategory($page, $hidden);
     }
 
     public function getParentCategory(HasNodeInterface $page, $includeHidden = false)

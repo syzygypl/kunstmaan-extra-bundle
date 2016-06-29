@@ -48,12 +48,13 @@ class ContentCategoryService implements ContentCategoryInterface
 
     /**
      * @param HasNodeInterface $page
+     * @param bool $hidden
      *
      * @return Category
      */
-    public function getMainCategory(HasNodeInterface $page)
+    public function getMainCategory(HasNodeInterface $page, $hidden = false)
     {
-        $breadcrumbs = $this->getBreadcrumbs($page);
+        $breadcrumbs = $this->getBreadcrumbs($page, $hidden);
 
         if (sizeof($breadcrumbs) > 1) {
             array_shift($breadcrumbs);

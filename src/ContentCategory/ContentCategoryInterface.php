@@ -16,10 +16,11 @@ interface ContentCategoryInterface
 
     /**
      * @param HasNodeInterface $page
+     * @param bool $hidden
      *
      * @return Category
      */
-    public function getMainCategory(HasNodeInterface $page);
+    public function getMainCategory(HasNodeInterface $page, $hidden = false);
 
     /**
      * @param HasNodeInterface $page
