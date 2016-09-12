@@ -42,7 +42,10 @@ class Configuration implements ConfigurationInterface
         $dateFormats = $dateFormats->prototype('array');
         $dateFormats->prototype('scalar');
 
-
+        /** @var ArrayNodeDefinition $bem */
+        $bem = $rootNode->children()->arrayNode('bem')->normalizeKeys(false);
+        $bem = $bem->prototype('array');
+        $bem->normalizeKeys(false)->prototype('scalar');
 
         return $treeBuilder;
 

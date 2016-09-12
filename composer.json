@@ -6,7 +6,8 @@
         "nassau/registry-compiler": "^1.1"
     },
     "require-dev": {
-        "friendsofsymfony/user-bundle": "2.0.*@dev"
+        "friendsofsymfony/user-bundle": "2.0.*@dev",
+        "phpunit/phpunit": "^5.5"
     },
     "license": "MIT",
     "authors": [
@@ -18,6 +19,11 @@
     "autoload": {
         "psr-4": {
             "ArsThanea\\KunstmaanExtraBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ArsThanea\\KunstmaanExtraBundle\\": "tests/"
         }
     }
 }

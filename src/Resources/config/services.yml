@@ -9,6 +9,7 @@ parameters:
     kunstmaan_extra.page_url.class: 'ArsThanea\KunstmaanExtraBundle\Url\PageUrlService'
     kunstmaan_extra.intl.date_formatter.class: 'ArsThanea\KunstmaanExtraBundle\Intl\DateFormatter'
     kunstmaan_extra.page_context.page_controller_context.class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageControllerContext'
+    kunstmaan_extra.wysiwyg_filter.class: 'ArsThanea\KunstmaanExtraBundle\WysiwygFilter\WysiwygFilter'
 
 services:
     kunstmaan_extra.public_node_versions:
@@ -102,3 +103,12 @@ services:
           - name: page_context_provider
             priority: 0
 
+    kunstmaan_extra.wysiwyg_filter:
+        class: '%kunstmaan_extra.wysiwyg_filter.class%'
+        arguments:
+          - '@kunstmaan_extra.wysiwyg_filter.crawler'
+          - '%kunstmaan_extra.bem%'
+
+    kunstmaan_extra.wysiwyg_filter.crawler:
+        class: 'Symfony\Component\DomCrawler\Crawler'
+        public: false

@@ -1,6 +1,7 @@
 <?php
 
 namespace ArsThanea\KunstmaanExtraBundle\Twig;
+use ArsThanea\KunstmaanExtraBundle\WysiwygFilter\WysiwygFilter;
 
 /**
  * Format HTML content directly from the CMS:
@@ -20,6 +21,19 @@ namespace ArsThanea\KunstmaanExtraBundle\Twig;
  */
 class BemTwigExtension extends \Twig_Extension
 {
+    /**
+     * @var WysiwygFilter
+     */
+    private $wysiwygFilter;
+
+    /**
+     * @param WysiwygFilter $wysiwygFilter
+     */
+    public function __construct(WysiwygFilter $wysiwygFilter)
+    {
+        $this->wysiwygFilter = $wysiwygFilter;
+    }
+
     public function getFilters()
     {
         return [
@@ -27,27 +41,9 @@ class BemTwigExtension extends \Twig_Extension
         ];
     }
 
-    public function functionBem($string, $mapping = [])
+    public function functionBem($html, $allowed = null)
     {
-        if (false === is_array($mapping)) {
-            $mapping = ['p' => $mapping];
-        }
-
-        $keys = array_map(function ($tagName) {
-            return sprintf('<%s>', $tagName);
-        }, array_keys($mapping));
-
-        $string = strip_tags($string, implode('', $keys));
-
-        $mapping = array_map(function ($tagName, $className) {
-            if (!$className) {
-                return sprintf('<%s>', $tagName);
-            }
-
-            return sprintf('<%s class="%s">', $tagName, $className);
-        }, array_keys($mapping), array_values($mapping));
-
-        return strtr($string, array_combine($keys, $mapping));
+        return $this->wysiwygFilter->filter($html, $allowed);
 
     }
 

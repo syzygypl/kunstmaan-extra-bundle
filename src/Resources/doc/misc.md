@@ -82,6 +82,42 @@ strips all other tags by the way:
  #}
 ```
 
+### Configuration
+
+You can extract common bem settings to `config.yml`:
+
+```yaml
+kunstmaan_extra:
+    bem:
+        common: 
+            p: landingPageAnswer__text
+            b: null
+```
+
+And use the key instead of configuration array:
+
+```twig
+{{ content|bem("common") }}
+```
+
+### Advanced usage
+
+Since the filter uses a whitelist aproach, all other tags and attributes are removed. To whitelist them, use an array
+with null values or a dot notation. Notice, that those two filters are the same:
+
+```yaml
+kunstmaan_extra:
+    bem:
+        allowed_attributes:
+            a: 
+                class: bem__anchor
+                href: null
+                target: null
+                
+        dot_notation: 
+            a.href.target: bem__anchor
+```
+
 ## Automatically fix orphans
 
 Replaces phases like `a cat` with `a&nbsp;cat` to keep them in the same line.

@@ -60,6 +60,7 @@ services:
     ars_thanea_kunstmaan_extra.twig.bem_twig_extension:
         class: '%ars_thanea_kunstmaan_extra.twig.bem_twig_extension.class%'
         public: false
+        arguments: [ '@kunstmaan_extra.wysiwyg_filter' ]
         tags:
             - { name: twig.extension }
 

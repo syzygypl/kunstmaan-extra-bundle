@@ -44,6 +44,8 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
             $loader->load('redis_services.yml');
         }
 
+        $container->setParameter('kunstmaan_extra.bem', $configs['bem']);
+
         $container->setParameter('kunstmaan_node_search.search_configuration.node.class', KunstmaanExtraNodePagesConfiguration::class);
         $container->setParameter('kunstmaan_search.search.class', ChainSearchProvider::class);
 
