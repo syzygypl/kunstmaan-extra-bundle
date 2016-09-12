@@ -1,0 +1,16 @@
+parameters:
+  doctrine_cache.redis.host: '%kunstmaan_extra.redis_host%'
+  doctrine_cache.redis.port: '%kunstmaan_extra.redis_port%'
+  doctrine_cache.redis.password: '%kunstmaan_extra.redis_password%'
+
+services:
+  kunstmaan_extra.redis_client:
+    class: '%doctrine_cache.redis.connection.class%'
+    public: false
+    calls:
+        - [ 'connect', ['%doctrine_cache.redis.host%', '%doctrine_cache.redis.port%'] ]
+        - [ 'auth', ['%doctrine_cache.redis.password%'] ]
+
+  kunstmaan_extra.redis_session_handler:
+    class: 'ArsThanea\KunstmaanExtraBundle\Session\RedisSessionHandler'
+    arguments: [ '@kunstmaan_extra.redis_client' ]

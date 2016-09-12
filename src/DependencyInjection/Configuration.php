@@ -23,6 +23,12 @@ class Configuration implements ConfigurationInterface
         $assets->children()->scalarNode('cdn_url')->defaultValue("");
         $assets->children()->scalarNode('web_prefix')->defaultNull();
 
+        $redis = $rootNode->children()->arrayNode('redis');
+        $redis->addDefaultsIfNotSet();
+        $redis->children()->scalarNode('host')->defaultValue("localhost");
+        $redis->children()->scalarNode('port')->defaultValue(6379);
+        $redis->children()->scalarNode('password')->defaultNull();
+
         $search = $rootNode->children()->arrayNode('search');
         $search->addDefaultsIfNotSet();
         $search->children()->scalarNode('url')->defaultNull();

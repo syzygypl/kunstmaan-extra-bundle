@@ -37,6 +37,12 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
         $loader->load('form_types.yml');
         $loader->load('ref_id_providers.yml');
 
+        if (extension_loaded("redis")) {
+            $container->setParameter('kunstmaan_extra.redis_host', $configs['redis']['host']);
+            $container->setParameter('kunstmaan_extra.redis_port', $configs['redis']['port']);
+            $container->setParameter('kunstmaan_extra.redis_password', $configs['redis']['password']);
+            $loader->load('redis_services.yml');
+        }
 
         $container->setParameter('kunstmaan_node_search.search_configuration.node.class', KunstmaanExtraNodePagesConfiguration::class);
         $container->setParameter('kunstmaan_search.search.class', ChainSearchProvider::class);
