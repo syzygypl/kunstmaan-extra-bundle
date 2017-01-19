@@ -3,7 +3,8 @@
     "require": {
         "ext-intl": "*",
         "kunstmaan/bundles-cms": "~3.5",
-        "nassau/registry-compiler": "^1.1"
+        "nassau/registry-compiler": "^1.1",
+        "guzzlehttp/guzzle": ">=6.0"
     },
     "require-dev": {
         "friendsofsymfony/user-bundle": "2.0.*@dev",

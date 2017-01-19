@@ -16,6 +16,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('kunstmaan_extra');
 
+        $rootNode->children()->scalarNode('tinypng_api_key')->defaultNull();
         $rootNode->children()->scalarNode('generate_controller')->defaultNull();
 
         $assets = $rootNode->children()->arrayNode('assets');
@@ -46,6 +47,19 @@ class Configuration implements ConfigurationInterface
         $bem = $rootNode->children()->arrayNode('bem')->normalizeKeys(false);
         $bem = $bem->prototype('array');
         $bem->normalizeKeys(false)->prototype('scalar');
+
+        /** @var ArrayNodeDefinition $imgix */
+        $imgix = $rootNode->children()->arrayNode('imgix')->addDefaultsIfNotSet();
+        $imgix->children()->scalarNode('bucket')->defaultNull();
+
+        /** @var ArrayNodeDefinition $presets */
+        $presets = $imgix->children()->arrayNode('presets')->prototype('array');
+        $presets->prototype('scalar');
+
+        $srcset = $rootNode->children()->arrayNode('srcset')->addDefaultsIfNotSet();
+        $srcset->children()->scalarNode('default_filter')->defaultValue('srcset');
+        $srcset->children()->integerNode('image_width_threshold')->defaultValue(100);
+        $srcset->children()->arrayNode('breakpoints')->prototype('scalar');
 
         return $treeBuilder;
 

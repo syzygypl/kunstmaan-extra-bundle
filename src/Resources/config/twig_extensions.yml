@@ -10,6 +10,7 @@ parameters:
     ars_thanea_kunstmaan_extra.twig.typography_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\TypographyTwigExtension'
     ars_thanea_kunstmaan_extra.twig.pretty_date_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\PrettyDateTwigExtension'
     ars_thanea_kunstmaan_extra.twig.navigation_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\NavigationTwigExtension'
+    ars_thanea_kunstmaan_extra.twig.imagine_twig_extension.class: 'ArsThanea\KunstmaanExtraBundle\Twig\ImagineTwigExtension'
 
 services:
 
@@ -89,5 +90,15 @@ services:
         class: '%ars_thanea_kunstmaan_extra.twig.navigation_twig_extension.class%'
         public: false
         arguments: [ '@kunstmaan_extra.navigation.navigation' ]
+        tags:
+            - { name: twig.extension }
+
+
+    ars_thanea_kunstmaan_extra.twig.imagine_twig_extension:
+        class: '%ars_thanea_kunstmaan_extra.twig.imagine_twig_extension.class%'
+        public: false
+        arguments:
+          - '@ars_thanea_kunstmaan_extra.imagine.srcset_calculator'
+          - '@?ars_thanea.kunstmaan_extra.imagine.imgix_filter'
         tags:
             - { name: twig.extension }

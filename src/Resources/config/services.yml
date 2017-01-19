@@ -112,3 +112,14 @@ services:
     kunstmaan_extra.wysiwyg_filter.crawler:
         class: 'Symfony\Component\DomCrawler\Crawler'
         public: false
+
+    ars_thanea_kunstmaan_extra.imagine.srcset_calculator:
+        class: 'ArsThanea\KunstmaanExtraBundle\Imagine\SrcsetCalculator'
+        public: false
+        arguments:
+          - '@liip_imagine.cache.manager'
+          - '%kunstmaan_extra.srcset_breakpoints%'
+          - image_width_threshold: '%kunstmaan_extra.srcset_image_width_threshold%'
+            default_filter: '%kunstmaan_extra.srcset_default_filter%'
+        calls:
+          - [ 'setResizer', [ '@?ars_thanea.kunstmaan_extra.imagine.imgix_filter' ] ]

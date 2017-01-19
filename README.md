@@ -7,6 +7,7 @@
  * [Site Tree](src/Resources/doc/site-tree.md)
  * [Form types](src/Resources/doc/form-types.md)
  * [Misc](src/Resources/doc/misc.md)
+ * [Imagine extensions](src/Resources/doc/imagine.md)
  * [Search](src/Resources/doc/search.md)
  
  

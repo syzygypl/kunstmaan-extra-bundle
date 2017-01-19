@@ -64,6 +64,17 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
             $loader->load('assets.yml');
         }
 
+        if ($configs['tinypng_api_key']) {
+            $container->setParameter('kunstmaan_extra.tinypng_api_key', $configs['tinypng_api_key']);
+            $loader->load('imagine_tinypng_services.yml');
+        }
+
+        if ($configs['imgix']['bucket']) {
+            $container->setParameter('kunstmaan_extra.imgix_bucket', $configs['imgix']['bucket']);
+            $container->setParameter('kunstmaan_extra.imgix_presets', $configs['imgix']['presets']);
+            $loader->load('imagine_imgix_services.yml');
+        }
+
         if ($configs['generate_controller']) {
             $container->setDefinition('kunstmaan_extra.typehinting_controller_cache_warmer', (new Definition)
                 ->setClass(TypehintingControllerCacheWarmer::class)
@@ -87,5 +98,38 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
                 ]
             ]
         ]);
+
+        $this->prependImagineBreakpoints($container);
+    }
+
+
+    private function prependImagineBreakpoints(ContainerBuilder $container)
+    {
+        $config = $this->processConfiguration(new Configuration(), $container->getExtensionConfig($this->getAlias()));
+
+        $breakpoints = $config['srcset']['breakpoints'];
+        $defaultFilter = $config['srcset']['default_filter'];
+
+        $container->setParameter('kunstmaan_extra.srcset_breakpoints', $breakpoints);
+        $container->setParameter('kunstmaan_extra.srcset_default_filter', $defaultFilter);
+        $container->setParameter('kunstmaan_extra.srcset_image_width_threshold', $config['srcset']['image_width_threshold']);
+
+        if (false === isset($breakpoints)) {
+            return ;
+        }
+
+        $value = [
+            'filters' => [
+                'strip' => null,
+                'auto_rotate' => null,
+            ],
+        ];
+
+        if ($config['tinypng_api_key']) {
+            $value += ['post_processors' => ['tinypng_com' => null]];
+        }
+
+        $container->prependExtensionConfig('liip_imagine', ['filter_sets' => [$defaultFilter => $value]]);
+
     }
 }

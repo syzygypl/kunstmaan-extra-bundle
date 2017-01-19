@@ -1,0 +1,16 @@
+parameters:
+    ars_thanea_kunstmaan_extra.imagine.tinypng_com_post_processor.class: 'ArsThanea\KunstmaanExtraBundle\Imagine\TinypngComPostProcessor'
+
+services:
+    ars_thanea_kunstmaan_extra.imagine.tinypng_com_post_processor:
+        class: '%ars_thanea_kunstmaan_extra.imagine.tinypng_com_post_processor.class%'
+        arguments:
+          - '@ars_thanea_kunstmaan_extra.imagine.tinypng_com_post_processor.client'
+          - '%kunstmaan_extra.tinypng_api_key%'
+        tags:
+            - name: liip_imagine.filter.post_processor
+              post_processor: tinypng_com
+
+    ars_thanea_kunstmaan_extra.imagine.tinypng_com_post_processor.client:
+        class: 'GuzzleHttp\Client'
+        public: false

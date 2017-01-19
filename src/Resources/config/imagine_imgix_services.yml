@@ -1,0 +1,20 @@
+services:
+  ars_thanea.kunstmaan_extra.imagine.imgix_filter:
+    class: 'ArsThanea\KunstmaanExtraBundle\Imagine\ImgixFilter'
+    arguments:
+     - '@ars_thanea.kunstmaan_extra.imagine.imgix_serializer'
+     - '@liip_imagine.cache.manager'
+     - '%kunstmaan_extra.imgix_presets%'
+
+  ars_thanea.kunstmaan_extra.imagine.imgix_serializer:
+    class: 'ArsThanea\KunstmaanExtraBundle\Imagine\ImgixSerializer'
+    public: false
+
+  ars_thanea.kunstmaan_extra.imagine.imgix_data_loader:
+    class: 'ArsThanea\KunstmaanExtraBundle\Imagine\ImgixDataLoader'
+    arguments:
+     - '@ars_thanea.kunstmaan_extra.imagine.imgix_serializer'
+     - 'https://%kunstmaan_extra.imgix_bucket%.imgix.net/'
+    tags:
+      - name: liip_imagine.binary.loader
+        loader: imgix
