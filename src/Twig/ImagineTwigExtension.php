@@ -28,7 +28,7 @@ class ImagineTwigExtension extends \Twig_Extension
     {
         return array_filter([
             new \Twig_SimpleFilter('srcset', [$this, 'getSrcset']),
-            $this->imgix ? new \Twig_SimpleFilter('imgixFilter', [$this, 'imgixFilter']) : null,
+            $this->imgix ? new \Twig_SimpleFilter('imgix_filter', [$this, 'imgixFilter']) : null,
         ]);
     }
 
