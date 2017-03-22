@@ -58,7 +58,9 @@ class WysiwygFilter
             $config = $mapping[$nodeName];
             $DOMElement = $element->getNode(0);
 
-            foreach ($DOMElement->attributes as $attr) {
+            // warning: attributes is a map that reindexes when removing an attribute
+            // you need to copy it for iteraton
+            foreach (iterator_to_array($DOMElement->attributes) as $attr) {
                 if (false === array_key_exists($attr->nodeName, $config)) {
                     $DOMElement->removeAttributeNode($attr);
                 }
