@@ -31,7 +31,7 @@ abstract class KunstmaanExtraPage extends AbstractPage
         $type = substr(str_replace('\\Entity\\', '\\Form\\', $this->getType()), 0, - strlen('Page')) . 'AdminType';
 
         if (class_exists($type)) {
-            return new $type;
+            return $type;
         }
 
         return parent::getDefaultAdminType();

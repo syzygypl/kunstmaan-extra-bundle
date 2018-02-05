@@ -121,7 +121,7 @@ class NodeEntityType extends DoctrineType
 
                 return $qb;
             },
-            'empty_value'     => ' ',
+            'placeholder'     => ' ',
             'required'        => false,
         ]);
 

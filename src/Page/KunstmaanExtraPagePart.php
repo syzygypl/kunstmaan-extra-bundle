@@ -19,7 +19,7 @@ abstract class KunstmaanExtraPagePart extends AbstractPagePart
     {
         $type = substr(str_replace('\\Entity\\', '\\Form\\', $this->getType()), 0, - strlen('PagePart')) . 'AdminType';
 
-        return new $type;
+        return $type;
     }
 
     public function getDefaultView()
