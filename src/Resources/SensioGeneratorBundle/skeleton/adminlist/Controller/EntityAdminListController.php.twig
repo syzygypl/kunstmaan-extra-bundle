@@ -1,0 +1,31 @@
+<?php
+
+namespace {{ namespace }}\Controller\AdminList;
+
+use Kunstmaan\AdminListBundle\AdminList\Configurator\AdminListConfiguratorInterface;
+use {{ namespace }}\AdminList\{{ entity_class }}AdminListConfigurator;
+use ArsThanea\KunstmaanExtraBundle\AdminList\AbstractAdminListController;
+
+/**
+ * The admin list controller for {{ entity_class }}
+ */
+class {{ entity_class }}AdminListController extends AbstractAdminListController
+{
+    /**
+     * @var AdminListConfiguratorInterface
+     */
+    private $configurator;
+
+    /**
+     * @return AdminListConfiguratorInterface
+     */
+    public function getAdminListConfigurator()
+    {
+        if (!isset($this->configurator)) {
+            $this->configurator = new {{ entity_class }}AdminListConfigurator($this->getEntityManager());
+        }
+
+        return $this->configurator;
+    }
+
+}

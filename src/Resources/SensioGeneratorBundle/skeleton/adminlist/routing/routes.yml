@@ -1,0 +1,51 @@
+{{ bundle.name | lower }}_admin_{{ entity_class | lower }}:
+  defaults: { _controller: '{{ bundle.name }}:AdminList\{{ entity_class }}AdminList:index' }
+  path: /{{ entity_class|lower }}
+
+{{ bundle.name | lower }}_admin_{{ entity_class | lower }}_add:
+  defaults: { _controller: '{{ bundle.name }}:AdminList\{{ entity_class }}AdminList:add' }
+  path: /{{ entity_class|lower }}/add
+  methods: ['GET', 'POST']
+
+{{ bundle.name | lower }}_admin_{{ entity_class | lower }}_edit:
+  defaults: { _controller: '{{ bundle.name }}:AdminList\{{ entity_class }}AdminList:edit' }
+  path: /{{ entity_class|lower }}/{id}
+  methods: ['GET', 'POST']
+  requirements:
+    id: \d+
+
+{{ bundle.name | lower }}_admin_{{ entity_class | lower }}_view:
+  defaults: { _controller: '{{ bundle.name }}:AdminList\{{ entity_class }}AdminList:view' }
+  path: /{{ entity_class|lower }}/{id}/view
+  methods: ['GET']
+  requirements:
+    id: \d+
+
+{{ bundle.name | lower }}_admin_{{ entity_class | lower }}_delete:
+  defaults: { _controller: '{{ bundle.name }}:AdminList\{{ entity_class }}AdminList:delete' }
+  path: /{{ entity_class|lower }}/{id}/delete
+  methods: ['GET', 'POST']
+  requirements:
+    id: \d+
+
+{{ bundle.name | lower }}_admin_{{ entity_class | lower }}_export:
+  defaults: { _controller: '{{ bundle.name }}:AdminList\{{ entity_class }}AdminList:export' }
+  path: /{{ entity_class|lower }}/export.{_format}
+  methods: ['GET', 'POST']
+  requirements:
+    _format: csv|ods|xlsx
+
+{{ bundle.name | lower }}_admin_{{ entity_class | lower }}_move_up:
+  defaults: { _controller: '{{ bundle.name }}:AdminList\{{ entity_class }}AdminList:moveUp' }
+  path: /{{ entity_class|lower }}/{id}/move-up
+  methods: ['GET']
+  requirements:
+    id: \d+
+
+{{ bundle.name | lower }}_admin_{{ entity_class | lower }}_move_down:
+  defaults: { _controller: '{{ bundle.name }}:AdminList\{{ entity_class }}AdminList:moveDown' }
+  path: /{{ entity_class|lower }}/{id}/move-down
+  methods: ['GET']
+  requirements:
+    id: \d+
+
