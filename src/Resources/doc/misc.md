@@ -127,3 +127,17 @@ Replaces phases like `a cat` with `a&nbsp;cat` to keep them in the same line.
    page.content|orphans
 }}
 ```
+
+## AdminList Generator
+
+To make routes work, add this entry to your bundle routing config: 
+
+```yaml
+app_admin_lists:
+    resource: '@WebsiteBundle/Resources/config/routing/admin'
+    type:     directory
+    prefix:   /{_locale}/admin/
+    requirements:
+         _locale: "%requiredlocales%"
+
+```
