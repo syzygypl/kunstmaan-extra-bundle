@@ -61,6 +61,9 @@ class Configuration implements ConfigurationInterface
         $srcset->children()->integerNode('image_width_threshold')->defaultValue(100);
         $srcset->children()->arrayNode('breakpoints')->prototype('scalar');
 
+        $typography = $rootNode->children()->arrayNode('typography')->addDefaultsIfNotSet();
+        $typography->children()->scalarNode('orphans')->defaultNull();
+
         return $treeBuilder;
 
     }

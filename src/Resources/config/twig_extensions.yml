@@ -74,6 +74,7 @@ services:
 
     ars_thanea_kunstmaan_extra.twig.typography_twig_extension:
         class: '%ars_thanea_kunstmaan_extra.twig.typography_twig_extension.class%'
+        arguments: ['%kunstmaan_extra.typography.orphans%']
         public: false
         tags:
             - { name: twig.extension }

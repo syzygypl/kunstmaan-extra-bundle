@@ -75,6 +75,8 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
             $loader->load('imagine_imgix_services.yml');
         }
 
+        $container->setParameter('kunstmaan_extra.typography.orphans', $configs['typography']['orphans']);
+
         if ($configs['generate_controller']) {
             $container->setDefinition('kunstmaan_extra.typehinting_controller_cache_warmer', (new Definition)
                 ->setClass(TypehintingControllerCacheWarmer::class)

@@ -128,6 +128,22 @@ Replaces phases like `a cat` with `a&nbsp;cat` to keep them in the same line.
 }}
 ```
 
+This filter tries very hard not to break HTML. You can override the used regex with `kunstmaan_extra.typography.orphans` setting; the default is:
+
+```regexp
+/
+    \b            # start at a word boundary
+    (?<!\<)       # exclude opening HTML tags
+    (             # first matching group is important for replace
+        \w{1,2}\.?      # orphan optionally followed by a period
+        (?:
+            <\/?\w+>    # don’t let a closing HTML tag brake the match
+        )*?
+    )
+    \s+           # match one or many whitespace characters
+/umx
+```
+
 ## AdminList Generator
 
 To make routes work, add this entry to your bundle routing config: 

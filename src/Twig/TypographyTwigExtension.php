@@ -4,6 +4,24 @@ namespace ArsThanea\KunstmaanExtraBundle\Twig;
 
 class TypographyTwigExtension extends \Twig_Extension
 {
+    private $regex;
+
+    public function __construct($regex = null)
+    {
+        $this->regex = $regex ?: '/
+            \b            # start at a word boundary
+            (?<!\<)       # exclude opening HTML tags
+            (             # first matching group is important for replace
+                \w{1,2}\.?      # orphan optionally followed by a period
+                (?:
+                    <\/?\w+>    # don’t let a closing HTML tag brake the match
+                )*?
+            )
+            \s+           # match one or many whitespace characters
+        /umx';
+    }
+
+
     public function getFilters()
     {
         return [
@@ -20,7 +38,7 @@ class TypographyTwigExtension extends \Twig_Extension
     {
         $nonBreakingSpace = ' ';
 
-        return preg_replace("/\\b(\\w{1,2}\\.?) /um", '$1' . $nonBreakingSpace, $text);
+        return preg_replace($this->regex, '$1' . $nonBreakingSpace, $text);
     }
 
 
