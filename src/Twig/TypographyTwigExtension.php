@@ -15,6 +15,7 @@ class TypographyTwigExtension extends \Twig_Extension
                 \w{1,2}\.?      # orphan optionally followed by a period
                 (?:
                     <\/?\w+>    # don’t let a closing HTML tag brake the match
+                    (?!\s*<\w)  # but exclude spaces between HTML tags
                 )*?
             )
             \s+           # match one or many whitespace characters
