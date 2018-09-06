@@ -30,19 +30,23 @@ class RedisSessionHandler implements \SessionHandlerInterface
 
     public function open($savePath, $name)
     {
+        return true;
     }
 
     public function gc($maxLifetime)
     {
+        return true;
     }
 
     public function close()
     {
+        return true;
     }
 
     public function destroy($sessionId)
     {
         $this->redis->del($this->keyPrefix . $sessionId);
+        return true;
     }
 
     /**
@@ -68,5 +72,7 @@ class RedisSessionHandler implements \SessionHandlerInterface
         $this->redis->set($sessionId, $sessionData);
 
         $this->redis->expire($sessionId, $this->maxLifetime);
+
+        return true;
     }
 }
