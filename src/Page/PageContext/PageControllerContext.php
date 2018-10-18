@@ -8,7 +8,6 @@ use Kunstmaan\UtilitiesBundle\Helper\ClassLookup;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
 class PageControllerContext implements PageContextProviderInterface
 {
 
@@ -49,7 +48,9 @@ class PageControllerContext implements PageContextProviderInterface
         }
 
         /** @var PageControllerInterface|ContainerAwareInterface $controller */
-        $controller = new $controllerClass;
+        $controller = $this->container->has($controllerClass)
+            ? $this->container->get($controllerClass)
+            : new $controllerClass;
 
         if (false === $controller instanceof PageControllerInterface) {
             throw new \RuntimeException("$controllerClass needs to implement " . PageControllerInterface::class);
@@ -61,4 +62,5 @@ class PageControllerContext implements PageContextProviderInterface
 
         return $controller->serviceAction($page, $context);
     }
+
 }
