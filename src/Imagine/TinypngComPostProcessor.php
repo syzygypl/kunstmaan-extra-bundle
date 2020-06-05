@@ -31,7 +31,7 @@ class TinypngComPostProcessor implements PostProcessorInterface
      *
      * @return BinaryInterface
      */
-    public function process(BinaryInterface $binary)
+    public function process(BinaryInterface $binary, array $options = []): BinaryInterface
     {
         $binary->getContent();
 
