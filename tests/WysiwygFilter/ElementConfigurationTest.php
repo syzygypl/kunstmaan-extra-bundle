@@ -1,8 +1,12 @@
 <?php
 
-namespace ArsThanea\KunstmaanExtraBundle\WysiwygFilter;
+namespace WysiwygFilter;
 
-class ElementConfigurationTest extends \PHPUnit_Framework_TestCase
+use ArsThanea\KunstmaanExtraBundle\WysiwygFilter\ElementConfiguration;
+use ArsThanea\KunstmaanExtraBundle\WysiwygFilter\WysiwygFilter;
+use PHPUnit\Framework\TestCase;
+
+class ElementConfigurationTest extends TestCase
 {
 
     /**

@@ -1,10 +1,11 @@
 <?php
 
-namespace ArsThanea\KunstmaanExtraBundle\Typography;
+namespace Typography;
 
 use ArsThanea\KunstmaanExtraBundle\Twig\TypographyTwigExtension;
+use PHPUnit\Framework\TestCase;
 
-class TypographyTwigExtensionTest extends \PHPUnit_Framework_TestCase
+class TypographyTwigExtensionTest extends TestCase
 {
     /**
      * @param string $input
