@@ -85,15 +85,8 @@ services:
 
     kunstamaan_extra.page_context:
       class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageContext'
-      arguments: [ '@kunstamaan_extra.page_context.collection' ]
-      tags:
-        - name: nassau.registry
-          tag: page_context_provider
-          method: ~
-          use_collection: true
-          order: priority
-          class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageContextProviderInterface'
-
+      arguments:
+        - !tagged 'page_context_provider'
 
     kunstmaan_extra.page_context.page_controller_context:
         class: '%kunstmaan_extra.page_context.page_controller_context.class%'
