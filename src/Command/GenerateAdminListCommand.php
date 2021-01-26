@@ -135,8 +135,8 @@ EOT
     /**
      * @return AdminListGenerator
      */
-    protected function createGenerator()
+    protected function createGenerator(): AdminListGenerator
     {
-        return new AdminListGenerator(__DIR__ . '/../Resources/SensioGeneratorBundle/skeleton/adminlist');
+        return new AdminListGenerator(__DIR__ . '/../Resources/generator/skeleton/adminlist');
     }
 }

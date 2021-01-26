@@ -18,14 +18,13 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class KunstmaanExtraExtension extends Extension implements PrependExtensionInterface
 {
-
     /**
      * Loads a specific configuration.
      *
      * @param array            $configs   An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
-     * @throws \InvalidArgumentException When provided tag is not defined in this extension
+     * @throws \InvalidArgumentException|\Exception When provided tag is not defined in this extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -104,7 +103,9 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
         $this->prependImagineBreakpoints($container);
     }
 
-
+    /**
+     * @param ContainerBuilder $container
+     */
     private function prependImagineBreakpoints(ContainerBuilder $container)
     {
         $config = $this->processConfiguration(new Configuration(), $container->getExtensionConfig($this->getAlias()));
@@ -132,6 +133,5 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
         }
 
         $container->prependExtensionConfig('liip_imagine', ['filter_sets' => [$defaultFilter => $value]]);
-
     }
 }

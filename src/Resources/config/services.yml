@@ -26,6 +26,7 @@ services:
     kunstmaan_extra.site_tree.current_locale:
         class: '%kunstmaan_extra.site_tree.current_locale.class%'
         arguments: [ '@request_stack', '@kunstmaan_admin.domain_configuration' ]
+        public: true
 
     kunstmaan_extra.site_tree.bread_crumbs:
         class: '%kunstmaan_extra.site_tree.bread_crumbs.class%'
@@ -35,6 +36,7 @@ services:
     kunstmaan_extra.content_type:
         class: '%kunstmaan_extra.content_type.class%'
         arguments: [ '@kunstmaan_node.pages_configuration' ]
+        public: true
 
 
     kunstmaan_extra.site_tree:
@@ -68,13 +70,13 @@ services:
     ars_thanea_kunstmaan_extra.node_repository:
         public: false
         class: 'Kunstmaan\NodeBundle\Repository\NodeRepository'
-        factory: 'doctrine.orm.entity_manager:getRepository'
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
         arguments: [ 'KunstmaanNodeBundle:Node' ]
 
     ars_thanea_kunstmaan_extra.node_translation_repository:
         public: false
         class: 'Kunstmaan\NodeBundle\Repository\NodeTranslationRepository'
-        factory: 'doctrine.orm.entity_manager:getRepository'
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
         arguments: [ 'KunstmaanNodeBundle:NodeTranslation' ]
 
     kunstmaan_extra.intl.date_formatter:
@@ -85,14 +87,9 @@ services:
 
     kunstamaan_extra.page_context:
       class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageContext'
-      arguments: [ '@kunstamaan_extra.page_context.collection' ]
-      tags:
-        - name: nassau.registry
-          tag: page_context_provider
-          method: ~
-          use_collection: true
-          order: priority
-          class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageContextProviderInterface'
+      arguments:
+        - !tagged_locator 'page_context_provider'
+      public: true
 
 
     kunstmaan_extra.page_context.page_controller_context:

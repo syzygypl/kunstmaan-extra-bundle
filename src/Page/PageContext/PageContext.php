@@ -3,6 +3,7 @@
 namespace ArsThanea\KunstmaanExtraBundle\Page\PageContext;
 
 use Kunstmaan\NodeBundle\Entity\HasNodeInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class PageContext
 {
@@ -12,9 +13,9 @@ class PageContext
     private $providers;
 
     /**
-     * @param PageContextProviderInterface[] $providers
+     * @param ServiceLocator $providers
      */
-    public function __construct($providers)
+    public function __construct(ServiceLocator $providers)
     {
         $this->providers = $providers;
     }
