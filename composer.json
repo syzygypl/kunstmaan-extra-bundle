@@ -1,13 +1,25 @@
 {
     "name": "arsthanea/kunstmaan-extra-bundle",
+    "version": "3.0.0",
     "require": {
+        "php": "^7.4",
         "ext-intl": "*",
-        "kunstmaan/bundles-cms": ">=5.2",
-        "nassau/registry-compiler": "~1.2",
+        "ext-json": "*",
+        "kunstmaan/admin-bundle": "^5.7",
+        "kunstmaan/adminlist-bundle": "^5.7",
+        "kunstmaan/media-bundle": "^5.7",
+        "kunstmaan/node-bundle": "^5.7",
+        "kunstmaan/node-search-bundle": "^5.7",
+        "kunstmaan/pagepart-bundle": "^5.7",
+        "kunstmaan/search-bundle": "^5.7",
+        "kunstmaan/translator-bundle": "^5.7",
+        "kunstmaan/user-management-bundle": "^5.7",
         "guzzlehttp/guzzle": ">=6.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.5"
+        "phpunit/phpunit": "^5.5",
+        "symfony/maker-bundle": "^1.28",
+        "kunstmaan/generator-bundle": "^5.7"
     },
     "license": "MIT",
     "authors": [

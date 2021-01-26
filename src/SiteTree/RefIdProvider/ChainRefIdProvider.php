@@ -6,6 +6,7 @@ namespace ArsThanea\KunstmaanExtraBundle\SiteTree\RefIdProvider;
 
 use ArsThanea\KunstmaanExtraBundle\SiteTree\HasRefInterface;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class ChainRefIdProvider implements RefIdProviderInterface
 {
@@ -17,20 +18,19 @@ class ChainRefIdProvider implements RefIdProviderInterface
     /**
      * ChainRefIdProvider constructor.
      *
-     * @param RefIdProviderInterface[]|Collection $providers
+     * @param ServiceLocator $providers
      */
-    public function __construct(Collection $providers)
+    public function __construct(ServiceLocator $providers)
     {
         $this->providers = $providers;
     }
-
 
     /**
      * @param mixed $value
      *
      * @return HasRefInterface|null
      */
-    public function getRefId($value)
+    public function getRefId($value): ?HasRefInterface
     {
         foreach ($this->providers as $provider) {
             $ref = $provider->getRefId($value);

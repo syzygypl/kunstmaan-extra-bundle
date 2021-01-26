@@ -1,12 +1,9 @@
 <?php
 
-
 namespace ArsThanea\KunstmaanExtraBundle\ContentType;
-
 
 interface PageContentTypeInterface
 {
-
     /**
      * Maps:
      *   article -> Acme\BundleName\Entity\Pages\ArticlePage
@@ -30,6 +27,4 @@ interface PageContentTypeInterface
      * @return array
      */
     public function getAllContentTypeClasses();
-
-
 }

@@ -10,16 +10,8 @@ services:
     ars_thanea_kunstmaan_extra.site_tree.ref.chain:
       public: false
       class: '%ars_thanea_kunstmaan_extra.site_tree.ref.chain.class%'
-      arguments: [ '@ars_thanea_kunstmaan_extra.site_tree.ref.chain.collection' ]
-
-    ars_thanea_kunstmaan_extra.site_tree.ref.chain.collection:
-      class: Doctrine\Common\Collections\ArrayCollection
-      public: false
-      tags:
-        - name: nassau.registry
-          tag: kunstmaan_extra.ref_id_provider
-          order: priority
-          class: 'ArsThanea\KunstmaanExtraBundle\SiteTree\RefIdProvider\RefIdProviderInterface'
+      arguments:
+        - !tagged_locator kunstmaan_extra.ref_id_provider
 
     ars_thanea_kunstmaan_extra.site_tree.ref.node:
         public: false

@@ -19,7 +19,7 @@ class KernelCachedVersioningScheme implements AssetVersioningSchemeInterface
      */
     public function __construct($cachePath, $webPrefix)
     {
-        if (file_exists($cachePath)) {
+        if (clearstatcache(true, $cachePath) && file_exists($cachePath)) {
             $this->cache = include $cachePath;
         }
 

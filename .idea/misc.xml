@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/src/Resources/SensioGeneratorBundle/skeleton/adminlist/AdminList/AdminListConfigurator.php" />
-    <file url="file://$PROJECT_DIR$/src/Resources/SensioGeneratorBundle/skeleton/adminlist/Controller/EntityAdminListController.php.twig" />
-    <file url="file://$PROJECT_DIR$/src/Resources/SensioGeneratorBundle/skeleton/adminlist/Form/EntityAdminType.php" />
-    <file url="file://$PROJECT_DIR$/src/Resources/SensioGeneratorBundle/skeleton/adminlist/routing/routes.yml" />
+    <file url="file://$PROJECT_DIR$/src/Resources/generator/skeleton/adminlist/AdminList/AdminListConfigurator.php" />
+    <file url="file://$PROJECT_DIR$/src/Resources/generator/skeleton/adminlist/Controller/EntityAdminListController.php.twig" />
+    <file url="file://$PROJECT_DIR$/src/Resources/generator/skeleton/adminlist/Form/EntityAdminType.php" />
+    <file url="file://$PROJECT_DIR$/src/Resources/generator/skeleton/adminlist/routing/routes.yml" />
   </component>
 </project>
