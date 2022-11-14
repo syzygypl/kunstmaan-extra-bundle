@@ -2,8 +2,7 @@
     "name": "arsthanea/kunstmaan-extra-bundle",
     "require": {
         "ext-intl": "*",
-        "kunstmaan/bundles-cms": ">=5.2",
-        "nassau/registry-compiler": "~1.2",
+        "kunstmaan/bundles-cms": "~5.10",
         "guzzlehttp/guzzle": ">=6.0"
     },
     "require-dev": {

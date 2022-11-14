@@ -26,6 +26,7 @@ services:
     kunstmaan_extra.site_tree.current_locale:
         class: '%kunstmaan_extra.site_tree.current_locale.class%'
         arguments: [ '@request_stack', '@kunstmaan_admin.domain_configuration' ]
+        public: true
 
     kunstmaan_extra.site_tree.bread_crumbs:
         class: '%kunstmaan_extra.site_tree.bread_crumbs.class%'
@@ -35,6 +36,7 @@ services:
     kunstmaan_extra.content_type:
         class: '%kunstmaan_extra.content_type.class%'
         arguments: [ '@kunstmaan_node.pages_configuration' ]
+        public: true
 
 
     kunstmaan_extra.site_tree:
@@ -85,14 +87,9 @@ services:
 
     kunstamaan_extra.page_context:
       class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageContext'
-      arguments: [ '@kunstamaan_extra.page_context.collection' ]
-      tags:
-        - name: nassau.registry
-          tag: page_context_provider
-          method: ~
-          use_collection: true
-          order: priority
-          class: 'ArsThanea\KunstmaanExtraBundle\Page\PageContext\PageContextProviderInterface'
+      arguments:
+        - !tagged_locator 'page_context_provider'
+      public: true
 
 
     kunstmaan_extra.page_context.page_controller_context:
