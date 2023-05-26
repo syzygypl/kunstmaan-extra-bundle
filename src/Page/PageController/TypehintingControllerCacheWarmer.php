@@ -2,26 +2,24 @@
 
 namespace ArsThanea\KunstmaanExtraBundle\Page\PageController;
 
+use ArsThanea\KunstmaanExtraBundle\ContentType\ContentTypeService;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmer;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class TypehintingControllerCacheWarmer extends CacheWarmer
 {
-    /**
-     * @var KernelInterface
-     */
     private $kernel;
-    /**
-     * @var
-     */
     private $path;
+    private $contentType;
 
-    /**
-     * @param KernelInterface $kernel
-     */
-    public function __construct(KernelInterface $kernel, $path)
+    public function __construct(
+        KernelInterface    $kernel,
+        ContentTypeService $contentType,
+                           $path
+    )
     {
         $this->kernel = $kernel;
+        $this->contentType = $contentType;
         $this->path = $path;
     }
 
@@ -36,7 +34,7 @@ class TypehintingControllerCacheWarmer extends CacheWarmer
      *
      * @return bool true if the warmer is optional, false otherwise
      */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return true;
     }
@@ -48,7 +46,7 @@ class TypehintingControllerCacheWarmer extends CacheWarmer
      */
     public function warmUp($cacheDir)
     {
-        $pages = $this->kernel->getContainer()->get('kunstmaan_extra.content_type')->getAllContentTypeClasses();
+        $pages = $this->contentType->getAllContentTypeClasses();
         $pageparts = $this->kernel->getContainer()->getParameter('kunstmaan_page_part.page_parts_presets');
 
         $classes = array_unique(array_filter(iterator_to_array($this->getClasses($pages, $pageparts))));
@@ -60,6 +58,9 @@ class TypehintingControllerCacheWarmer extends CacheWarmer
         file_put_contents($this->path, $code);
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     private function generateCode($classes, $controllerName)
     {
         $methods = [];
@@ -119,7 +120,7 @@ class TypehintingControllerCacheWarmer extends CacheWarmer
 
     }
 
-    private function getClasses($pages, $pageparts)
+    private function getClasses($pages, $pageparts): \Generator
     {
         foreach ($pages as $item) {
             yield $item;

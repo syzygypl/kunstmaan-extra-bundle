@@ -29,7 +29,9 @@ services:
 
     kunstmaan_extra.site_tree.bread_crumbs:
         class: '%kunstmaan_extra.site_tree.bread_crumbs.class%'
-        arguments: [ '@ars_thanea_kunstmaan_extra.node_repository', '@kunstmaan_extra.site_tree.current_locale' ]
+        arguments:
+          - '@ars_thanea_kunstmaan_extra.node_repository'
+          - '@kunstmaan_extra.site_tree.current_locale'
 
 
     kunstmaan_extra.content_type:
@@ -123,3 +125,17 @@ services:
             default_filter: '%kunstmaan_extra.srcset_default_filter%'
         calls:
           - [ 'setResizer', [ '@?ars_thanea.kunstmaan_extra.imagine.imgix_filter' ] ]
+
+    kunstmaan_node_search.search_configuration.node:
+      class: 'ArsThanea\KunstmaanExtraBundle\Search\KunstmaanExtraNodePagesConfiguration'
+      arguments:
+        - "@service_container"
+        - "@kunstmaan_search.search"
+        - "%kunstmaan_node_search.indexname%"
+        - "%kunstmaan_node_search.indextype%"
+        - '@event_dispatcher'
+        - '@kunstmaan_extra.content_type'
+      calls:
+        - [ setAclProvider, [ "@security.acl.provider" ] ]
+      tags:
+        - { name: kunstmaan_search.search_configuration, alias: Node }

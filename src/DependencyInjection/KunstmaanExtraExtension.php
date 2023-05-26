@@ -7,6 +7,8 @@ namespace ArsThanea\KunstmaanExtraBundle\DependencyInjection;
 use ArsThanea\KunstmaanExtraBundle\Page\PageController\TypehintingControllerCacheWarmer;
 use ArsThanea\KunstmaanExtraBundle\Search\ChainSearchProvider;
 use ArsThanea\KunstmaanExtraBundle\Search\KunstmaanExtraNodePagesConfiguration;
+use Exception;
+use InvalidArgumentException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,10 +24,11 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
     /**
      * Loads a specific configuration.
      *
-     * @param array            $configs   An array of configuration values
+     * @param array $configs An array of configuration values
      * @param ContainerBuilder $container A ContainerBuilder instance
      *
-     * @throws \InvalidArgumentException When provided tag is not defined in this extension
+     * @throws InvalidArgumentException When provided tag is not defined in this extension
+     * @throws Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -46,17 +49,25 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
 
         $container->setParameter('kunstmaan_extra.bem', $configs['bem']);
 
-        $container->setParameter('kunstmaan_node_search.search_configuration.node.class', KunstmaanExtraNodePagesConfiguration::class);
+        $container->setParameter(
+            'kunstmaan_node_search.search_configuration.node.class',
+            KunstmaanExtraNodePagesConfiguration::class
+        );
         $container->setParameter('kunstmaan_search.search.class', ChainSearchProvider::class);
 
         if ($configs['search']['url']) {
-            $container->setParameter(CompilerPass\ElasticSearchCompilerPass::PARAM_SEARCH_URL, $configs['search']['url']);
+            $container->setParameter(
+                CompilerPass\ElasticSearchCompilerPass::PARAM_SEARCH_URL,
+                $configs['search']['url']
+            );
         }
 
         $container->setParameter('kunstmaan_extra.search.replicas', $configs['search']['replicas']);
         $container->setParameter('kunstmaan_extra.search.shards', $configs['search']['shards']);
 
-        $container->setParameter('kunstmaan_extra.date_formats', isset($configs['date_formats']) ? $configs['date_formats'] : []);
+        $container->setParameter('kunstmaan_extra.date_formats',
+            $configs['date_formats'] ?? []
+        );
 
         if ($configs['assets']['web_prefix']) {
             $container->setParameter('kunstmaan_extra.assets.cdn_url', $configs['assets']['cdn_url']);
@@ -80,7 +91,11 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
         if ($configs['generate_controller']) {
             $container->setDefinition('kunstmaan_extra.typehinting_controller_cache_warmer', (new Definition)
                 ->setClass(TypehintingControllerCacheWarmer::class)
-                ->setArguments([new Reference('kernel'), $configs['generate_controller']])
+                ->setArguments([
+                    new Reference('kernel'),
+                    new Reference('kunstmaan_extra.content_type'),
+                    $configs['generate_controller']
+                ])
                 ->addTag('kernel.cache_warmer')
             );
         }
@@ -114,7 +129,10 @@ class KunstmaanExtraExtension extends Extension implements PrependExtensionInter
 
         $container->setParameter('kunstmaan_extra.srcset_breakpoints', $breakpoints);
         $container->setParameter('kunstmaan_extra.srcset_default_filter', $defaultFilter);
-        $container->setParameter('kunstmaan_extra.srcset_image_width_threshold', $config['srcset']['image_width_threshold']);
+        $container->setParameter(
+            'kunstmaan_extra.srcset_image_width_threshold',
+            $config['srcset']['image_width_threshold']
+        );
 
         if (false === isset($breakpoints)) {
             return ;
